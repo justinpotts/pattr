@@ -132,7 +132,7 @@ a.pure-button-primary {
  */
 
 .splash-container {
-    background: #1f8dd6;
+    background: #2d3e50;
     z-index: 1;
     overflow: hidden;
     /* The following styles are required for the "scroll-over" effect */
@@ -163,7 +163,9 @@ a.pure-button-primary {
     padding: 1em 1.6em;
     font-weight: 100;
     border-radius: 5px;
-    line-height: 1em;
+    border-width:
+    line-height: .5em;
+    text-transform: none;
 }
 
 /* This is the subheading that appears on the blue section */
@@ -220,6 +222,26 @@ a.pure-button-primary {
     background: #111;
 }
 
+.footer a:link {
+    color: white;
+    text-decoration: none;
+}
+
+.footer a:hover {
+    color: #1f8dd6;
+    text-decoration: underline;
+}
+
+.email-link{
+    color: grey;
+    text-decoration: none;
+}
+
+.email-link:hover {
+    color: black;
+    text-decoration: underline;
+}
+
 /*
  * -- TABLET (AND UP) MEDIA QUERIES --
  * On tablets and other medium-sized devices, we want to customize some
@@ -267,6 +289,28 @@ a.pure-button-primary {
         border: none;
     }
 
+}
+
+.typed-cursor{
+    opacity: 1;
+    -webkit-animation: blink 0.7s infinite;
+    -moz-animation: blink 0.7s infinite;
+    animation: blink 0.7s infinite;
+}
+@keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-webkit-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
+}
+@-moz-keyframes blink{
+    0% { opacity:1; }
+    50% { opacity:0; }
+    100% { opacity:1; }
 }
 
 /*

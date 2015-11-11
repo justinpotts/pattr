@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A layout example that shows off a responsive product landing page.">
+
+    <title>Pattr &ndash; Home</title>
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+
+
+
+<!--[if lte IE 8]>
+
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
+
+<![endif]-->
+<!--[if gt IE 8]><!-->
+
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+
+<!--<![endif]-->
+
+
+
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+
+
+
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="/combo/1.18.13?/css/layouts/marketing-old-ie.css">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="../static/css/marketing.css">
+    <!--<![endif]-->
+
+
+
+
+<!--[if lt IE 9]>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7/html5shiv.js"></script>
+<![endif]-->
+
+
+
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-41480445-1', 'purecss.io');
+ga('send', 'pageview');
+</script>
+<script src="../static/js/typed.js"></script>
+<script>
+    $(function(){
+        $(".element").typed({
+            strings: ["Welcome to pattr"],
+            typeSpeed: 40
+
+        });
+        setTimeout(function item(){$(".typed-cursor").fadeOut(300)}, 2300)
+        setTimeout(function item(){$(".element").fadeOut(500)}, 2500)
+        setTimeout(function item(){$("#main-name").fadeIn(800)}, 3010)
+
+    });
+    function startChat() {
+        var roomCode = Math.random().toString(36).slice(-8);
+        window.location.href='/c/'+roomCode
+    }
+</script>
+</head>
+<body>
+<div class="splash-container">
+    <div class="splash">
+        <h1 class="splash-head" style="font-family:Aller"><span class=element></span><div id="main-name" style="display:none"><span style="color:lime">&middot;</span>pattr</div>
+</h1>
+        <p class="splash-subhead">
+            Truly instant private messaging. No logs, no hassle.
+        </p>
+        <p>
+            <a onclick=startChat() role="button" class="pure-button-primary pure-button">Start a private chat</a>
+        </p>
+    </div>
+</div>
+
+<div class="content-wrapper">
+    <div class="content">
+        <h2 class="content-head is-center">We make it easy to have untracked convos instantly.</h2>
+
+        <div class="pure-g">
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+
+                <h3 class="content-subhead">
+                    <i class="fa fa-rocket"></i>
+                    Get started quickly. No sign in required.
+                </h3>
+                <p>
+                    Click the button to start a private chat, then share the link with you friends. It doesn't get any easier than that.
+                </p>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-trash-o"></i>
+                    Messages aren't kept on our servers.
+                </h3>
+                <p>
+                    We don't keep records of any conversations, which means you can talk about anything you want, trace-free.
+                </p>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-pencil"></i>
+                    We kept design in mind.
+                </h3>
+                <p>
+                    That's why everything you see will have a beautiful design, and chat rooms are customizable with different color schemes.
+                </p>
+            </div>
+            <div class="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+                <h3 class="content-subhead">
+                    <i class="fa fa-code-fork"></i>
+                    We're open source
+                </h3>
+                <p>
+                    We believe in fostering innovation and openness on the web. That's why we decided to make the code open to you. Want to contribute? Click <a href="#">here</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ribbon l-box-lrg pure-g">
+        <div class="l-box-lrg is-center pure-u-1 pure-u-md-1-2 pure-u-lg-2-5">
+            <br>
+            <br>
+            <br>
+            <h1 class="splash-head" style="font-family:Aller"><span style="color:lime">&middot;</span>pattr
+        </div>
+        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-3-5">
+
+            <h2 class="content-head content-head-ribbon">Learn more</h2>
+
+            <p>
+                We developed pattr with privacy and efficiency in mind. Unlike other disposable chat
+                services, we never save your data on our servers, ensuring your conversation stays
+                private and secure. To start a chat, all you have to do is share a link. No signing
+                in or providing an email address.
+            </p>
+
+            <p>
+                <strong>The Chat Extension System (Coming Soon):</strong>
+                Some people might want to keep their chat room, and thats ok! For $0.99 you can call
+                in one of our trusty bots, who will stay in the chat room for the next 24 hours to keep
+                it from being deleted.
+            </p>
+            <p>
+                <strong>On Advertisements:</strong>
+                We don't want your experience to be ruined by pesky advertisements, which also lowers the quality
+                of our site. We run purely off donations and Chat Extensions, so please… don't hesitate to pay for
+                our coffees!</p>
+        </div>
+    </div>
+
+    <div class="content">
+        <h2 class="content-head is-center">About Us</h2>
+
+        <div class="pure-g">
+            <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
+                <form class="pure-form pure-form-stacked">
+                    <fieldset>
+
+                        <label for="name">Your Name</label>
+                        <input id="name" type="text" placeholder="Your Name">
+
+
+                        <label for="email">Your Email</label>
+                        <input id="email" type="email" placeholder="Your Email">
+
+                        <p>
+                        <label for="password">Donation amount:</label>
+                        <select>
+                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Cup of coffee ($5)</a></option>
+                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Lunch ($10)</a></option>
+                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Three burritos ($25)</a></option>
+                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Concert tickets ($50)</a></option>
+                        </select></p>
+                        <a href="#Donate" type="button" class="pure-button">Donate</a>
+                    </fieldset>
+                </form>
+            </div>
+
+            <div class="l-box-lrg pure-u-1 pure-u-md-3-5">
+                <h4>Donate</h4>
+                <p>
+                    We pay for our fees completely off of donations from our users. Please
+                    help keep the site up and running for a little bit longer, just for the
+                    cost a cup of coffee.
+                </p>
+
+                <h4>Contact us</h4>
+                <p>
+                    We'd love to here your feedback, questions, and comments. Please send us
+                    and email at <a class=email-link href="mailto:pattr@pattr.me">pattr@pattr.me</a> and let
+                    us know what you think. We typically respond in 1-3 business days.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="footer l-box is-center">
+        Open source and developed by Justin Potts and Alex Meza.
+        <div>View the code <a href="https://github.com/justinpotts/pattr/">here</a>.</div>
+        <a href="mailto:pattr@pattr.me">Contact us</a> | <a href="https://github.com/justinpotts/pattr/">Contribute</a> | <a href="#terms">Legal</a>
+    </div>
+
+</div>
+
+
+<script>
+(function (root) {
+// -- Data --
+root.YUI_config = {"version":"3.17.2","base":"http:\u002F\u002Fyui.yahooapis.com\u002F3.17.2\u002F","comboBase":"http:\u002F\u002Fyui.yahooapis.com\u002Fcombo?","comboSep":"&","root":"3.17.2\u002F","filter":"min","logLevel":"error","combine":true,"patches":[],"maxURLLength":2048,"groups":{"vendor":{"combine":true,"comboBase":"\u002Fcombo\u002F1.18.13?","base":"\u002F","root":"\u002F","modules":{"css-mediaquery":{"path":"vendor\u002Fcss-mediaquery.js"},"handlebars-runtime":{"path":"vendor\u002Fhandlebars.runtime.js"}}},"app":{"combine":true,"comboBase":"\u002Fcombo\u002F1.18.13?","base":"\u002Fjs\u002F","root":"\u002Fjs\u002F"}}};
+root.app || (root.app = {});
+root.app.yui = {"use":function () { return this._bootstrap('use', [].slice.call(arguments)); },"require":function () { this._bootstrap('require', [].slice.call(arguments)); },"ready":function (callback) { this.use(function () { callback(); }); },"_bootstrap":function bootstrap(method, args) { var self = this, d = document, head = d.getElementsByTagName('head')[0], ie = /MSIE/.test(navigator.userAgent), callback = [], config = typeof YUI_config != "undefined" ? YUI_config : {}; function flush() { var l = callback.length, i; if (!self.YUI && typeof YUI == "undefined") { throw new Error("YUI was not injected correctly!"); } self.YUI = self.YUI || YUI; for (i = 0; i < l; i++) { callback.shift()(); } } function decrementRequestPending() { self._pending--; if (self._pending <= 0) { setTimeout(flush, 0); } else { load(); } } function createScriptNode(src) { var node = d.createElement('script'); if (node.async) { node.async = false; } if (ie) { node.onreadystatechange = function () { if (/loaded|complete/.test(this.readyState)) { this.onreadystatechange = null; decrementRequestPending(); } }; } else { node.onload = node.onerror = decrementRequestPending; } node.setAttribute('src', src); return node; } function load() { if (!config.seed) { throw new Error('YUI_config.seed array is required.'); } var seed = config.seed, l = seed.length, i, node; if (!self._injected) { self._injected = true; self._pending = seed.length; } for (i = 0; i < l; i++) { node = createScriptNode(seed.shift()); head.appendChild(node); if (node.async !== false) { break; } } } callback.push(function () { var i; if (!self._Y) { self.YUI.Env.core.push.apply(self.YUI.Env.core, config.extendedCore || []); self._Y = self.YUI(); self.use = self._Y.use; if (config.patches && config.patches.length) { for (i = 0; i < config.patches.length; i += 1) { config.patches[i](self._Y, self._Y.Env._loader); } } } self._Y[method].apply(self._Y, args); }); self.YUI = self.YUI || (typeof YUI != "undefined" ? YUI : null); if (!self.YUI && !self._injected) { load(); } else if (self._pending <= 0) { setTimeout(flush, 0); } return this; }};
+root.YUI_config || (root.YUI_config = {});
+root.YUI_config.seed = ["http:\u002F\u002Fyui.yahooapis.com\u002Fcombo?3.17.2\u002Fyui\u002Fyui-min.js"];
+root.YUI_config.groups || (root.YUI_config.groups = {});
+root.YUI_config.groups.app || (root.YUI_config.groups.app = {});
+root.YUI_config.groups.app.modules = {"start\u002Fapp":{"path":"start\u002Fapp.js","requires":["handlebars-runtime","yui","base-build","router","pjax-base","view","start\u002Fmodels\u002Fgrid","start\u002Fviews\u002Finput","start\u002Fviews\u002Foutput","start\u002Fviews\u002Fdownload"]},"start\u002Fmodels\u002Fgrid":{"path":"start\u002Fmodels\u002Fgrid.js","requires":["yui","querystring","base-build","model","model-sync-rest","start\u002Fmodels\u002Fmq"]},"start\u002Fmodels\u002Fmq":{"path":"start\u002Fmodels\u002Fmq.js","requires":["css-mediaquery","attribute","base-build","model","model-list"]},"start\u002Fviews\u002Fdownload":{"path":"start\u002Fviews\u002Fdownload.js","requires":["yui","base-build","querystring","view"]},"start\u002Fviews\u002Finput":{"path":"start\u002Fviews\u002Finput.js","requires":["base-build","start\u002Fmodels\u002Fmq","start\u002Fviews\u002Ftab"]},"start\u002Fviews\u002Foutput":{"path":"start\u002Fviews\u002Foutput.js","requires":["base-build","escape","start\u002Fviews\u002Ftab"]},"start\u002Fviews\u002Ftab":{"path":"start\u002Fviews\u002Ftab.js","requires":["yui","base-build","view"]}};
+}(this));
+</script>
+<script>
+app.yui.use('node-base', 'node-event-delegate', function (Y) {
+    // This just makes sure that the href="#" attached to the <a> elements
+    // don't scroll you back up the page.
+    Y.one('body').delegate('click', function (e) {
+        e.preventDefault();
+    }, 'a[href="#"]');
+});
+</script>
+</body>
+</html>
