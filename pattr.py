@@ -63,7 +63,7 @@ def index():
 def enter_chat(roomcode):
     session['uid'] = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(36))
     room = roomcode
-    return render_template('chatnew.html', room=room, uid=session['uid'])
+    return render_template('chat.html', room=room, uid=session['uid'])
 
 
 @socketio.on('my event', namespace='')
