@@ -36,7 +36,7 @@
         <link rel="stylesheet" href="/combo/1.18.13?/css/layouts/marketing-old-ie.css">
     <![endif]-->
     <!--[if gt IE 8]><!-->
-        <link rel="stylesheet" href="../static/css/marketing.css">
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='marketing.css') }}">
     <!--<![endif]-->
 
 
@@ -57,7 +57,7 @@ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 ga('create', 'UA-41480445-1', 'purecss.io');
 ga('send', 'pageview');
 </script>
-<script src="../static/js/typed.js"></script>
+<script src="{{ url_for('static', filename='typed.js')}}"></script>
 <script>
     $(function(){
         $(".element").typed({
