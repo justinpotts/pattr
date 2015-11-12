@@ -78,7 +78,7 @@ def nick_check(nickname):
         session['uid'] = nickname
         return temp_old + ' changed nickname to ' + session['uid']
     else:
-        return '@' + session['uid'] + ' Error in changing nick. Click <a href="#howto">here</a> for more information.'
+        return '@' + session['uid'] + ' Error in changing nick. To learn more, type <code>/help</code>.'
 
 
 @socketio.on('send message', namespace='')
@@ -88,6 +88,27 @@ def send_room_message(message):
         emit('my response',
              {'data': nick_check(message['data'][6:]), 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
              room=message['room'])
+    elif message['data'][:5] == '/help':
+        help_text = '\
+        <h2><strong>Help</strong></h2>\
+        <p><b>Change Nickname:</b> /nick</p>\
+        <p>Nicknames cannot contain HTML such as <code>h1</code>, <code>img</code>, or <code>font</code>. However, it may contain\
+        tags such as <code>href</code>, color, and font awesome icons.</p>\
+        <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
+        emit('my response',
+             {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
+             room=message['room'])
+    elif message['data'][:6] == '/about':
+         about_text = '\
+         <h2><strong>About</strong></h2> \
+         <p><span style="font-family:Aller">pattr</span> was developed by \
+         <a href="https://twitter.com/PottsJustin">Justin Potts</a>, and <a href="https://twitter.com/thealexmeza">Alex Meza</a> \
+         under the BSD Open Source license.</p> \
+         <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
+         <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
+         emit('my response',
+              {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
+              room=message['room'])
     else:
         emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},

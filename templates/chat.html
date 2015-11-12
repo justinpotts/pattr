@@ -52,7 +52,7 @@
             // the data is displayed in the "Received" section of the page
             socket.on('my response', function(msg) {
                 if(msg.bot == 'true') {
-                    $('#log').append('<div class="posts"><h1 class="name-sender">pattrbot</h1><section class="post"><div class="post-description"><p><i>'+ msg.data +'</i></p></div></section></div>');
+                    $('#log').append('<div class="posts"><h1 class="name-sender">pattrbot</h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
                 }
                 else if(msg.sender == '{{ uid }}') {
                     $('#log').append('<div class="posts"><h1 class="name-self-sent"><span class=post-title-sent>' + msg.sender + '</span></h1><section class="post"><div class="post-description"><p><strong>'+ msg.data +'</strong></p></div></section></div>');
