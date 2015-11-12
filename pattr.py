@@ -64,19 +64,12 @@ def join(message):
 
 
 def nick_check(nickname):
-    # Restrictions for nick names: sizes, images
-    restrictions = ['img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' 'font']
-    nick_passes = True
-    nick = nickname
-    for item in restrictions:
-        if item in nick:
-            nick_passes = False
-    if nick_passes:
+    if '<' not in nickname or '>' not in nickname:
         temp_old = session['uid']
-        session['uid'] = nickname
+        session['uid'] =  "".join(nickname.split())
         return temp_old + ' changed nickname to ' + session['uid']
     else:
-        return '@' + session['uid'] + ' Error in changing nick. To learn more, type <code>/help</code>.'
+        return '@' + session['uid'] + ' Error: nickname uses restricted characters. To learn more, type <code>/help</code>.'
 
 
 @socketio.on('send message', namespace='')
