@@ -33,10 +33,19 @@ def index():
         thread.start()
     return render_template('index.html')
 
+def generate_nick():
+    animals = ['buffalo', 'wildebeest', 'kudu', 'springbok', 'impala', 'antelope', 'lion', 'leopard', 'cheetah', 'serval',
+               'mongoose', 'elephant', 'giraffe', 'hyaena', 'jackal', 'rhino', 'zebra', 'crocodile']
+
+    adjectives = ['mystic', 'rustic', 'sharp', 'toxic', 'enchanted', 'quiet', 'noisy', 'lively', 'modern',
+                  'old', 'pleasant', 'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing',
+                  'jolly', 'mystic']
+
+    return 'pa-' + adjectives[random.randint(0,len(adjectives)-1)] + animals[random.randint(0,len(animals)-1)]
 
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
-    session['uid'] = 'pa-'+''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
+    session['uid'] = generate_nick()
     room = roomcode
     return render_template('chat.html', room=room, uid=session['uid'])
 
@@ -88,8 +97,6 @@ def send_room_message(message):
 @socketio.on('disconnect request', namespace='')
 def disconnect_request():
     session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my response',
-         {'data': 'Disconnected!', 'count': session['receive_count']})
     disconnect()
     return redirect('/index')
 
