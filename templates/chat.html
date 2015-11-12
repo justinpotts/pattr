@@ -51,18 +51,17 @@
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
             socket.on('my response', function(msg) {
-                if(msg.sender == '{{ uid }}') {
-                    $('#log').append('<div class="posts"><h1 class="name-self-sent"><span class=post-title-sent>' + msg.sender + '</span></h1><section class="post"><div class="post-description"><p><strong>'+ msg.data +'</strong></p></div></section></div>');
-                }
-                else if(msg.bot == 'true') {
+                if(msg.bot == 'true') {
                     $('#log').append('<div class="posts"><h1 class="name-sender">pattrbot</h1><section class="post"><div class="post-description"><p><i>'+ msg.data +'</i></p></div></section></div>');
+                }
+                else if(msg.sender == '{{ uid }}') {
+                    $('#log').append('<div class="posts"><h1 class="name-self-sent"><span class=post-title-sent>' + msg.sender + '</span></h1><section class="post"><div class="post-description"><p><strong>'+ msg.data +'</strong></p></div></section></div>');
                 }
                 else {
                     $('#log').append('<div class="posts"><h1 class="name-sender"><strong>' + msg.sender + '</strong></h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
                 }
                 var chatBox = document.getElementById("log");
                 chatBox.scrollTop = chatBox.scrollHeight;
-                console.log('scroll')
             });
 
             // event handler for new connections
@@ -70,11 +69,11 @@
                 socket.emit('my event', {data: 'You have entered the room!', 'bot':'true'});
                 socket.emit('join', {room: '{{ room }}'});
             });
-
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
             $('form#send_room').submit(function(event) {
                 socket.emit('send message', {room: '{{ room }}', data: $('#msg_data').val()});
+                $('#msg_data').val('');
                 return false;
             });
             $('form#set_nick').submit(function(event) {

@@ -36,7 +36,7 @@ def index():
 
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
-    session['uid'] = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(36))
+    session['uid'] = 'pa-'+''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(8))
     room = roomcode
     return render_template('chat.html', room=room, uid=session['uid'])
 
@@ -54,21 +54,35 @@ def join(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
 
 
+def nick_check(nickname):
+    # Restrictions for nick names: sizes, images
+    restrictions = ['img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    nick_passes = True
+    nick = nickname
+    if '<font>' in nick and '</font>' not in nick:
+        nick_passes = False
+    for item in restrictions:
+        if item in nick:
+            nick_passes = False
+    if nick_passes:
+        temp_old = session['uid']
+        session['uid'] = nickname
+        return temp_old + ' changed nickname to ' + session['uid']
+    else:
+        return '@' + session['uid'] + ' Error in changing nick. Click <a href="#howto">here</a> for more information.'
+
+
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
     if message['data'][:5] == '/nick':
-            session['uid'] = message['data'][5:]
-            message['data'] = 'Nickname changed to ' + session['uid']
-    emit('my response',
+        emit('my response',
+             {'data': nick_check(message['data'][6:]), 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
+             room=message['room'])
+    else:
+        emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},
          room=message['room'])
-
-
-@socketio.on('set nick')
-def set_nick(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    session['nick'] = message['data']
 
 
 @socketio.on('disconnect request', namespace='')
