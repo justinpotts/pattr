@@ -34,15 +34,14 @@ def index():
     return render_template('index.html')
 
 def generate_nick():
-    adjectives = ['mystic', 'rustic', 'sharp', 'flowery', 'windy', 'toxic', 'serene', 'dry', 'enchanted', 'barren',
-                  'tall', 'quiet', 'serene', 'noisy', 'lively', 'modern', 'old', 'crowded', 'historical', 'pleasant',
-                  'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing', 'jolly', 'mystic']
+    animals = ['buffalo', 'wildebeest', 'kudu', 'springbok', 'impala', 'antelope', 'lion', 'leopard', 'cheetah', 'serval',
+               'mongoose', 'elephant', 'giraffe', 'hyaena', 'jackal', 'rhino', 'zebra', 'crocodile']
 
-    nouns = ['mountain', 'peak', 'glacier', 'moon', 'meteor', 'forest', 'prairie', 'rock', 'grass', 'field',
-             'tower', 'building', 'cafe', 'cinema', 'theater', 'cathedral', 'park', 'alley', 'avenue', 'museum',
-             'jackrabbit', 'antelope', 'stallion', 'leopard', 'ocelot', 'sloth', 'polarbear', 'orca', 'shark', 'coral']
+    adjectives = ['mystic', 'rustic', 'sharp', 'toxic', 'enchanted', 'quiet', 'noisy', 'lively', 'modern',
+                  'old', 'pleasant', 'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing',
+                  'jolly', 'mystic']
 
-    return 'pa-' + adjectives[random.randint(0,29)] + nouns[random.randint(0,29)]
+    return 'pa-' + adjectives[random.randint(0,len(adjectives)-1)] + animals[random.randint(0,len(animals)-1)]
 
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
