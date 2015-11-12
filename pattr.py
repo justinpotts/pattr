@@ -65,11 +65,9 @@ def join(message):
 
 def nick_check(nickname):
     # Restrictions for nick names: sizes, images
-    restrictions = ['img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6']
+    restrictions = ['img', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6' 'font']
     nick_passes = True
     nick = nickname
-    if '<font>' in nick and '</font>' not in nick:
-        nick_passes = False
     for item in restrictions:
         if item in nick:
             nick_passes = False
