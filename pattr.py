@@ -57,6 +57,9 @@ def join(message):
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
+    if message['data'][:5] == '/nick':
+            session['uid'] = message['data'][5:]
+            message['data'] = 'Nickname changed to ' + session['uid']
     emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},
          room=message['room'])
