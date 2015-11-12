@@ -60,6 +60,9 @@
                 else {
                     $('#log').append('<div class="posts"><h1 class="name-sender"><strong>' + msg.sender + '</strong></h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
                 }
+                var chatBox = document.getElementById("log");
+                chatBox.scrollTop = chatBox.scrollHeight;
+                console.log('scroll')
             });
 
             // event handler for new connections
@@ -123,11 +126,15 @@
         </div>
     </div>
     <div class="content pure-u-1 pure-u-md-3-4">
-        <div id=log>
+        <div class=chat>
+            <div id=log>
+            </div>
         </div>
-        <form id="send_room" method="POST" action='#'>
-            <input name="msg_data" id="msg_data" placeholder"Message" class="chatbar" autocomplete="off" onClick='this.form.reset();' />
-        </form>
+        <div>
+            <form id="send_room" method="POST" action='#' class=pure-form>
+                <input name="msg_data" id="msg_data" type="text" placeholder="Type something..." autocomplete="off">
+            </form>
+        </div>
     </div>
 </div>
 

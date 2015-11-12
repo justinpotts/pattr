@@ -183,24 +183,37 @@ h3 {
     background: none;
 }
 
-input.chatbar {
-bottom:0;
-width:100%;
-height:7%;
+.pure-form input[type] {
+    border: 2px solid #ddd;
+    box-shadow: none;
+    font-size: 100%;
+    width: 100%;
+    margin-top: 10em;
+    margin-bottom: 1em;
+    width:68%;
+    height:7%;
 
-outline:none;
-resize: none;
+    outline:none;
+    resize: none;
+    bottom: 0px;
+    position: fixed;
+}
 
-border: none;
-border-bottom: rgb(61, 79, 93) medium solid !important;
-position: fixed;
-bottom: 10px;
-
-placeholder: 'Hey';
+.chat {
+    width: 100%;
+    margin-bottom: 3em;
+    width:68%;
+    max-height: 85%;
+    overflow-y: scroll;
+    outline:none;
+    resize: none;
+    position: fixed;
 }
 
 @media (min-width: 48em) {
     .content {
+        max-height: 100%;
+        overflow: hidden;
         padding: 2em 3em 0;
         margin-left: 25%;
     }
