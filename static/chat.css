@@ -203,11 +203,24 @@ h3 {
     width: 100%;
     margin-bottom: 3em;
     width:68%;
-    max-height: 85%;
+    height: 85%;
     overflow-y: scroll;
     outline:none;
     resize: none;
     position: fixed;
+}
+
+#disconnect-button {
+    background: none;
+    color: rgb(176, 202, 219);
+    opacity: 0%;
+    font-size: 22px;
+    border: none;
+
+}
+#disconnect-button:hover {
+    color: #DF2D4F;
+    border: none;
 }
 
 @media (min-width: 48em) {

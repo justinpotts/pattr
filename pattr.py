@@ -141,8 +141,14 @@ def send_room_message(message):
 @socketio.on('disconnect request', namespace='')
 def disconnect_request():
     session['receive_count'] = session.get('receive_count', 0) + 1
+    indiv_msg = 'You have disconnected.'
+    gr_msg = session['uid'] + ' has disconnected.'
+    emit('my response',
+         {'data': indiv_msg, 'count': session['receive_count'], 'bot': 'true'}, room=session['uid'])
     disconnect()
-    return redirect('/index')
+    emit('my response',
+         {'data': gr_msg, 'count': session['receive_count'], 'bot': 'true'}, room=session['room'])
+    render_template('index.html')
 
 
 @socketio.on('connect', namespace='')

@@ -38,7 +38,8 @@
         <link rel=stylesheet type=text/css href="{{ url_for('static', filename='chat.css') }}">
     <!--<![endif]-->
 
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.4.2.min.js"></script>
+    <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
     <script type="text/javascript" charset="utf-8">
         $(document).ready(function(){
@@ -85,6 +86,7 @@
             });
             $('form#disconnect').submit(function(event) {
                 socket.emit('disconnect request');
+                window.location.href = "/";
                 return false;
             });
         });
@@ -94,6 +96,19 @@
             $( "#link" ).select();
         });
     </script>
+
+
+        <script type="text/javascript">
+
+        $(document).ready(function(){
+
+            $('[data-toggle="tooltip"]').tooltip();
+
+        });
+
+        </script>
+
+
 
 
 
@@ -112,16 +127,7 @@
         <center><h1 style="font-family:Aller"><span style="color:lime">&middot;</span>pattr</h1></center>
         <div class="header">
             <h1 class="brand-title">Room:</h1>
-            <h2 id=link class="brand-tagline">{{ request.path }}</h2>
-            <nav class="nav">
-                <ul class="nav-list">
-                    <li class="nav-item nav-item-disconnect">
-                        <form id="disconnect" method="POST" action="#">
-                            <a class="pure-button" type=submit>Disconnect</a>
-                        </form>
-                    </li>
-                </ul>
-            </nav>
+            <h2 id=link class="brand-tagline"><form id="disconnect" class="disconnect" method="POST" action="#"><button id="disconnect-button" type="submit"><span class="fa fa-trash-o"></span> {{ request.path }} </button></form></h2>
         </div>
     </div>
     <div class="content pure-u-1 pure-u-md-3-4">
