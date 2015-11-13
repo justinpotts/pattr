@@ -48,22 +48,23 @@ def generate_nick():
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
     session['uid'] = generate_nick()
-    room = roomcode
-    return render_template('chat.html', room=room, uid=session['uid'])
-
-
-@socketio.on('my event', namespace='')
-def send_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
-    emit('my response',
-         {'data': message['data'], 'count': session['receive_count'], 'bot': message['bot']})
+    session['room'] = roomcode
+    return render_template('chat.html', room=session['room'], uid=session['uid'])
 
 
 @socketio.on('join', namespace='')
 def join(message):
     join_room(message['room'])
+    session['room'] = message['room']
     session['receive_count'] = session.get('receive_count', 0) + 1
-
+    indiv_msg = 'Joined room /c/' + session['room'] + '. For help, type <code>/help</code>. To learn more about Pattr, type <code>/about</code>.'
+    gr_msg = session['uid'] + ' has joined the room.'
+    emit('my response',
+         {'data': indiv_msg, 'count': session['receive_count'], 'bot': 'true'},
+         room=session['uid'])
+    emit('my response',
+         {'data': gr_msg, 'count': session['receive_count'], 'bot': 'true'},
+         room=session['room'])
 
 def nick_passes(nickname):
     if '<' in nickname or '>' in nickname:
@@ -85,7 +86,7 @@ def send_room_message(message):
             message['data'] = temp_old + ' changed nickname to ' + session['uid']
             emit('my response',
                  {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
-                 room=message['room'])
+                 room=session['room'])
         else:
             message['data'] = 'Error: Nickname uses restricted characters. To learn more, type <code>/help</code>.'
             emit('my response',
@@ -134,7 +135,7 @@ def send_room_message(message):
     else:
         emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},
-         room=message['room'])
+         room=session['room'])
 
 
 @socketio.on('disconnect request', namespace='')

@@ -69,8 +69,8 @@
 
             // event handler for new connections
             socket.on('connect', function() {
-                socket.emit('my event', {data: 'You have entered the room!', 'bot':'true'});
                 socket.emit('join', {room: '{{ room }}'});
+                return false;
             });
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
@@ -115,9 +115,6 @@
             <h2 id=link class="brand-tagline">{{ request.path }}</h2>
             <nav class="nav">
                 <ul class="nav-list">
-                    <li class="nav-item">
-                        <a id="share-link" class="pure-button" href="#"><span class="fa fa-link"></span>&nbsp;Share Link</a>
-                    </li>
                     <li class="nav-item nav-item-disconnect">
                         <form id="disconnect" method="POST" action="#">
                             <a class="pure-button" type=submit>Disconnect</a>
@@ -134,7 +131,7 @@
         </div>
         <div>
             <form id="send_room" method="POST" action='#' class=pure-form>
-                <input name="msg_data" id="msg_data" type="text" placeholder="Type something..." autocomplete="off">
+                <input name="msg_data" id="msg_data" type="text" autofocus="true" placeholder="Type something..." autocomplete="off">
             </form>
         </div>
     </div>
