@@ -92,16 +92,29 @@ def send_room_message(message):
                  {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
                  room=session['uid'])
 
+    elif message['data'][:2] == '/w':
+        msg = message['data'][2:].split(' ')
+        emit('my response',
+             {'data': msg[2], 'count': session['receive_count'], 'whisper': 'true', 'target':msg[1], 'sender': session['uid']},
+             room=msg[1])
+        emit('my response',
+             {'data': msg[2], 'count': session['receive_count'], 'whisper': 'true', 'target':msg[1], 'sender': session['uid']},
+             room=session['uid'])
+
     elif message['data'][:5] == '/help':
         help_text = '\
         <h2><strong>Help</strong></h2>\
-        <p><b>Change Nickname:</b> /nick</p>\
+        <p><b>Change Nickname:</b> <code>/nick nickname</code></p>\
         <p>Nicknames cannot contain HTML such as <code>h1</code>, <code>img</code>, or <code>font</code>. However, it may contain\
-        tags such as <code>href</code>, color, and font awesome icons.</p>\
+        tags such as <code>href</code>, color, and font awesome icons. Any spaces in the nickname will be removed.</p>\
+        <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
+        <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
+        <p><b>HTML</b></p>\
         <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
         emit('my response',
              {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
              room=session['uid'])
+
     elif message['data'][:6] == '/about':
          about_text = '\
          <h2><strong>About</strong></h2> \
@@ -113,9 +126,11 @@ def send_room_message(message):
          emit('my response',
               {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
               room=session['uid'])
+
     elif message['data'][:5] == '/quit':
           disconnect_text = session['uid'] + ' has left the room.'
           emit('disconnect_request')
+
     else:
         emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},
