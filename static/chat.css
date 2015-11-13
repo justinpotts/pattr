@@ -223,6 +223,11 @@ h3 {
     border: none;
 }
 
+@font-face {
+  font-family: "Aller";
+  src: url(Aller_Std_Bd.ttf) format("truetype");
+}
+
 @media (min-width: 48em) {
     .content {
         max-height: 100%;

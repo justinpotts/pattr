@@ -313,6 +313,11 @@ a.pure-button-primary {
     100% { opacity:1; }
 }
 
+@font-face {
+  font-family: "Aller";
+  src: url(Aller_Std_Bd.ttf) format("truetype");
+}
+
 /*
  * -- DESKTOP (AND UP) MEDIA QUERIES --
  * On desktops and other large devices, we want to over-ride some
