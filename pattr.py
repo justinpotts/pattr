@@ -14,6 +14,8 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 thread = None
 
+connected_users = []
+
 
 def background_thread():
     """Example of how to send server generated events to clients."""
@@ -63,22 +65,33 @@ def join(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
 
 
-def nick_check(nickname):
-    if '<' not in nickname or '>' not in nickname:
-        temp_old = session['uid']
-        session['uid'] =  "".join(nickname.split())
-        return temp_old + ' changed nickname to ' + session['uid']
+def nick_passes(nickname):
+    if '<' in nickname or '>' in nickname:
+        return False
     else:
-        return '@' + session['uid'] + ' Error: nickname uses restricted characters. To learn more, type <code>/help</code>.'
+        return True
 
 
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
     if message['data'][:5] == '/nick':
-        emit('my response',
-             {'data': nick_check(message['data'][6:]), 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
-             room=message['room'])
+        nick = message['data'][5:]
+        if '<' not in nick or '>' not in nick:
+            temp_old = session['uid']
+            session['uid'] =  "".join(nick.split())
+            leave_room(temp_old)
+            join_room(session['uid'])
+            message['data'] = temp_old + ' changed nickname to ' + session['uid']
+            emit('my response',
+                 {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
+                 room=message['room'])
+        else:
+            message['data'] = 'Error: Nickname uses restricted characters. To learn more, type <code>/help</code>.'
+            emit('my response',
+                 {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
+                 room=session['uid'])
+
     elif message['data'][:5] == '/help':
         help_text = '\
         <h2><strong>Help</strong></h2>\
@@ -88,7 +101,7 @@ def send_room_message(message):
         <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
         emit('my response',
              {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
-             room=message['room'])
+             room=session['uid'])
     elif message['data'][:6] == '/about':
          about_text = '\
          <h2><strong>About</strong></h2> \
@@ -99,7 +112,10 @@ def send_room_message(message):
          <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
          emit('my response',
               {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['uid']},
-              room=message['room'])
+              room=session['uid'])
+    elif message['data'][:5] == '/quit':
+          disconnect_text = session['uid'] + ' has left the room.'
+          emit('disconnect_request')
     else:
         emit('my response',
          {'data': message['data'], 'count': session['receive_count'], 'sender': session['uid']},
@@ -115,6 +131,7 @@ def disconnect_request():
 
 @socketio.on('connect', namespace='')
 def connect():
+    join_room(session['uid'])
     emit('my response', {'data': 'Connection successful...', 'count': 0, 'bot': 'true'})
 
 
