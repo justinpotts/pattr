@@ -123,12 +123,23 @@ def send_room_message(message):
                 for item in connected_users[session['room']]:
                     if connected_users[session['room']][item] == data[1]:
                         target_uid = item
-                emit('my response',
-                     {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
-                     room=target_uid)
-                emit('my response',
-                     {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
-                     room=session['uid'])
+                if target_uid == '':
+                    message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
+                    emit('my response',
+                         {'data': message, 'count': session['receive_count'], 'bot': 'true'},
+                         room=session['uid'])
+                elif target_uid == session['uid']:
+                    message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
+                    emit('my response',
+                         {'data': message, 'count': session['receive_count'], 'bot': 'true'},
+                         room=session['uid'])
+                else:
+                    emit('my response',
+                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                         room=target_uid)
+                    emit('my response',
+                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                         room=session['uid'])
 
         elif message['data'][:5] == '/help':
             help_text = '\
