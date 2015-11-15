@@ -68,21 +68,21 @@
 
             // event handler for new connections
             socket.on('connect', function() {
-                socket.emit('join', {room: '{{ room }}'});
+                socket.emit('join', {room: '{{ session["room"] }}'});
                 return false;
             });
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
             $('form#send_room').submit(function(event) {
                 if($('#msg_data').val().length > 0) {
-                    socket.emit('send message', {room: '{{ room }}', data: $('#msg_data').val()});
+                    socket.emit('send message', {room: '{{ session["room"] }}', data: $('#msg_data').val()});
                     $('#msg_data').val('');
                     return false;
                 }
                 return false;
             });
             $('form#set_nick').submit(function(event) {
-                socket.emit('send message', {room: '{{ room }}', data: $('#nickname').val()});
+                socket.emit('send message', {room: '{{ session["room"] }}', data: $('#nickname').val()});
                 return false;
             });
             $('form#disconnect').submit(function(event) {
