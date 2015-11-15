@@ -138,8 +138,8 @@ def send_room_message(message):
             Nicknames must be unique, so duplicate nicknames will produce an error.</p>\
             <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
             <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
-            <p><b>HTML</b></p>\
-            <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
+            <p><b>Users:</b> <code>/users</code></p>\
+            <p>View online users in the room.</p>'
             emit('my response',
                  {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
                  room=session['uid'])
