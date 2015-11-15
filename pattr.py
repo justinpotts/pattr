@@ -160,7 +160,7 @@ def send_room_message(message):
             users = []
             for item in connected_users[session['room']]:
                 users.append(connected_users[session['room']][item])
-            user_list_text = '<h2><strong>Users</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
+            user_list_text = '<h2><strong>Users (' + str(len(users)) + ')</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
             emit('my response',
                  {'data': user_list_text, 'count': session['receive_count'], 'bot': 'true'},
                  room=session['uid'])
