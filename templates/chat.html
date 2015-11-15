@@ -64,8 +64,7 @@
                 else {
                     $('#log').append('<div class="posts"><h1 class="name-sender"><strong>' + msg.sender + '</strong></h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
                 }
-                var chatBox = document.getElementById("log");
-                chatBox.scrollTop = chatBox.scrollHeight;
+                $('.chat').scrollTop($('.chat').prop("scrollHeight"));
             });
 
             // event handler for new connections
@@ -96,17 +95,6 @@
             $( "#link" ).select();
         });
     </script>
-
-
-        <script type="text/javascript">
-
-        $(document).ready(function(){
-
-            $('[data-toggle="tooltip"]').tooltip();
-
-        });
-
-        </script>
 
 
 
