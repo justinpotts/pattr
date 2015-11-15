@@ -106,15 +106,21 @@ def send_room_message(message):
         data = message['data'][2:].split(' ')
         message = ' '.join(data[2:])
         target_uid = ''
-        for item in connected_users[session['room']]:
-            if connected_users[session['room']][item] == data[1]:
-                target_uid = item
-        emit('my response',
-             {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
-             room=target_uid)
-        emit('my response',
-             {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
-             room=session['uid'])
+        if '<' in message or '>' in message:
+            message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
+            emit('my response',
+                 {'data': message, 'count': session['receive_count'], 'bot':'true'},
+                 room=session['uid'])
+        else:
+            for item in connected_users[session['room']]:
+                if connected_users[session['room']][item] == data[1]:
+                    target_uid = item
+            emit('my response',
+                 {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                 room=target_uid)
+            emit('my response',
+                 {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                 room=session['uid'])
 
     elif message['data'][:5] == '/help':
         help_text = '\
@@ -156,9 +162,15 @@ def send_room_message(message):
           emit('disconnect_request')
 
     else:
-        emit('my response',
-         {'data': message['data'], 'count': session['receive_count'], 'sender': session['nick']},
-         room=session['room'])
+        if '<' in message['data'] or '>' in message['data']:
+            msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
+            emit('my response',
+                 {'data': msg, 'count': session['receive_count'], 'bot':'true'},
+                 room=session['uid'])
+        else:
+            emit('my response',
+             {'data': message['data'], 'count': session['receive_count'], 'sender': session['nick']},
+             room=session['room'])
 
 
 @socketio.on('disconnect request', namespace='')
