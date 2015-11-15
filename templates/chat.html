@@ -74,8 +74,11 @@
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
             $('form#send_room').submit(function(event) {
-                socket.emit('send message', {room: '{{ room }}', data: $('#msg_data').val()});
-                $('#msg_data').val('');
+                if($('#msg_data').val().length > 0) {
+                    socket.emit('send message', {room: '{{ room }}', data: $('#msg_data').val()});
+                    $('#msg_data').val('');
+                    return false;
+                }
                 return false;
             });
             $('form#set_nick').submit(function(event) {

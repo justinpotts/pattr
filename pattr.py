@@ -82,85 +82,93 @@ def nick_passes(nickname):
     else:
         return True
 
+def msg_passes(msg):
+    if '<' in msg or '>' in msg:
+        return False
+    elif len(msg) == 0:
+        return False
+    else:
+        return True
 
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     session['receive_count'] = session.get('receive_count', 0) + 1
-    if message['data'][:5] == '/nick':
-        nick = "".join(message['data'][6:].split())
-        if nick_passes(nick):
-            temp_old = session['nick']
-            session['nick'] =  nick
-            connected_users[session['room']][session['uid']] = nick
-            message['data'] = temp_old + ' changed nickname to ' + session['nick']
+    if message['data'][:1] == '/':
+        if message['data'][:5] == '/nick':
+            nick = "".join(message['data'][6:].split())
+            if nick_passes(nick):
+                temp_old = session['nick']
+                session['nick'] =  nick
+                connected_users[session['room']][session['uid']] = nick
+                message['data'] = temp_old + ' changed nickname to ' + session['nick']
+                emit('my response',
+                     {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                     room=session['room'])
+            else:
+                message['data'] = 'Error: Nickname is already in use, or uses restricted characters. To learn more, type <code>/help</code>.'
+                emit('my response',
+                     {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                     room=session['uid'])
+
+        elif message['data'][:2] == '/w':
+            data = message['data'][2:].split(' ')
+            message = ' '.join(data[2:])
+            target_uid = ''
+            if '<' in message or '>' in message:
+                message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
+                emit('my response',
+                     {'data': message, 'count': session['receive_count'], 'bot':'true'},
+                     room=session['uid'])
+            else:
+                for item in connected_users[session['room']]:
+                    if connected_users[session['room']][item] == data[1]:
+                        target_uid = item
+                emit('my response',
+                     {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                     room=target_uid)
+                emit('my response',
+                     {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                     room=session['uid'])
+
+        elif message['data'][:5] == '/help':
+            help_text = '\
+            <h2><strong>Help</strong></h2>\
+            <p><b>Change Nickname:</b> <code>/nick nickname</code></p>\
+            <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>. \
+            Nicknames must be unique, so duplicate nicknames will produce an error.</p>\
+            <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
+            <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
+            <p><b>HTML</b></p>\
+            <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
             emit('my response',
-                 {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
-                 room=session['room'])
-        else:
-            message['data'] = 'Error: Nickname is already in use, or uses restricted characters. To learn more, type <code>/help</code>.'
-            emit('my response',
-                 {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                 {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
                  room=session['uid'])
 
-    elif message['data'][:2] == '/w':
-        data = message['data'][2:].split(' ')
-        message = ' '.join(data[2:])
-        target_uid = ''
-        if '<' in message or '>' in message:
-            message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
-            emit('my response',
-                 {'data': message, 'count': session['receive_count'], 'bot':'true'},
-                 room=session['uid'])
-        else:
+        elif message['data'][:6] == '/about':
+             about_text = '\
+             <h2><strong>About</strong></h2> \
+             <p><span style="font-family:Aller">pattr</span> was developed by \
+             <a href="https://twitter.com/PottsJustin">Justin Potts</a>, and <a href="https://twitter.com/thealexmeza">Alex Meza</a> \
+             under the BSD Open Source license.</p> \
+             <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
+             <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
+             emit('my response',
+                  {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                  room=session['uid'])
+
+        elif message['data'][:6] == '/users':
+            users = []
             for item in connected_users[session['room']]:
-                if connected_users[session['room']][item] == data[1]:
-                    target_uid = item
+                users.append(connected_users[session['room']][item])
+            user_list_text = '<h2><strong>Users</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
             emit('my response',
-                 {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
-                 room=target_uid)
-            emit('my response',
-                 {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                 {'data': user_list_text, 'count': session['receive_count'], 'bot': 'true'},
                  room=session['uid'])
-
-    elif message['data'][:5] == '/help':
-        help_text = '\
-        <h2><strong>Help</strong></h2>\
-        <p><b>Change Nickname:</b> <code>/nick nickname</code></p>\
-        <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>. \
-        Nicknames must be unique, so duplicate nicknames will produce an error.</p>\
-        <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
-        <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
-        <p><b>HTML</b></p>\
-        <p>A detailed HTML guide can be found <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element">here</a>.</p>'
-        emit('my response',
-             {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
-             room=session['uid'])
-
-    elif message['data'][:6] == '/about':
-         about_text = '\
-         <h2><strong>About</strong></h2> \
-         <p><span style="font-family:Aller">pattr</span> was developed by \
-         <a href="https://twitter.com/PottsJustin">Justin Potts</a>, and <a href="https://twitter.com/thealexmeza">Alex Meza</a> \
-         under the BSD Open Source license.</p> \
-         <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
-         <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
-         emit('my response',
-              {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
-              room=session['uid'])
-
-    elif message['data'][:6] == '/users':
-        users = []
-        for item in connected_users[session['room']]:
-            users.append(connected_users[session['room']][item])
-        user_list_text = '<h2><strong>Users</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
-        emit('my response',
-             {'data': user_list_text, 'count': session['receive_count'], 'bot': 'true'},
-             room=session['uid'])
-
-    elif message['data'][:5] == '/quit':
-          disconnect_text = session['nick'] + ' has left the room.'
-          emit('disconnect_request')
-
+        else:
+            msg = 'Command not found. For more information, type <code>/help</code>.'
+            emit('my response',
+                 {'data': msg, 'count': session['receive_count'], 'bot': 'true'},
+                 room=session['uid'])
     else:
         if '<' in message['data'] or '>' in message['data']:
             msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
@@ -178,7 +186,7 @@ def disconnect_request():
     session['receive_count'] = session.get('receive_count', 0) + 1
     indiv_msg = 'You have disconnected.'
     gr_msg = session['nick'] + ' has disconnected.'
-    connected_users[session['room']] = {key: value for key, value in connected_users[session['room']].items() if value is not session['nick']}
+    del connected_users[session['room']][session['uid']]
     emit('my response',
          {'data': indiv_msg, 'count': session['receive_count'], 'bot': 'true'}, room=session['uid'])
     disconnect()
