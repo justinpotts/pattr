@@ -79,6 +79,8 @@ def nick_passes(nickname):
         return False
     elif nickname in connected_users[session['room']].values():
         return False
+    elif len(nickname) == 0:
+        return False
     else:
         return True
 
