@@ -4,7 +4,7 @@ monkey.patch_all()
 
 import time, string, random
 from threading import Thread
-from flask import Flask, render_template, session, request
+from flask import Flask, render_template, session, request, redirect
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, \
     close_room, disconnect
 
@@ -50,14 +50,17 @@ def generate_nick():
 
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
-    session['uid'] = generate_id()
-    session['nick'] = generate_nick()
-    session['room'] = roomcode
-    try:
-        connected_users[session['room']][session['uid']] = session['nick']
-    except KeyError:
-        connected_users[session['room']] = {session['uid']:session['nick']}
-    return render_template('chat.html', room=session['room'], uid=session['nick'])
+    if request.url == 'http://pattr.me/c/'+roomcode or request.url == 'http://www.pattr.me/c/'+roomcode:
+        return redirect('http://chat.pattr.me/c/'+roomcode)
+    else:
+        session['uid'] = generate_id()
+        session['nick'] = generate_nick()
+        session['room'] = roomcode
+        try:
+            connected_users[session['room']][session['uid']] = session['nick']
+        except KeyError:
+            connected_users[session['room']] = {session['uid']:session['nick']}
+        return render_template('chat.html')
 
 
 @socketio.on('join', namespace='')

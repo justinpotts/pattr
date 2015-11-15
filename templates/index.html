@@ -59,6 +59,11 @@ ga('send', 'pageview');
 </script>
 <script src="{{ url_for('static', filename='typed.js')}}"></script>
 <script>
+    $(document).ready(function(){
+        if (window.location.href.indexOf('chat') > -1) {
+            window.location.href='http://pattr.me';
+        }
+    }
     $(function(){
         $(".element").typed({
             strings: ["Welcome to pattr"],
@@ -72,7 +77,12 @@ ga('send', 'pageview');
     });
     function startChat() {
         var roomCode = Math.random().toString(36).slice(-8);
-        window.location.href='/c/'+roomCode
+        if(window.location.href == 'http://pattr.me' || window.location.href == 'http://www.pattr.me') {
+            window.location.href='http://chat.pattr.me/c/'+roomCode;
+        }
+        else {
+            window.location.href='/c/'+roomCode;
+        }
     }
 </script>
 </head>

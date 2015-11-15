@@ -87,7 +87,12 @@
             });
             $('form#disconnect').submit(function(event) {
                 socket.emit('disconnect request');
-                window.location.href = "/";
+                if(window.location.href.indexOf('chat.pattr.me') > -1) {
+                    window.location.href='http://pattr.me/';
+                }
+                else {
+                    window.location.href='/';
+                }
                 return false;
             });
         });
