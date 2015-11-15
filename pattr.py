@@ -103,16 +103,17 @@ def send_room_message(message):
                  room=session['uid'])
 
     elif message['data'][:2] == '/w':
-        msg = message['data'][2:].split(' ')
+        data = message['data'][2:].split(' ')
+        message = ' '.join(data[2:])
         target_uid = ''
         for item in connected_users[session['room']]:
-            if connected_users[session['room']][item] == msg[1]:
+            if connected_users[session['room']][item] == data[1]:
                 target_uid = item
         emit('my response',
-             {'data': msg[2], 'count': session['receive_count'], 'whisper': 'true', 'target':msg[1], 'sender': session['nick']},
+             {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
              room=target_uid)
         emit('my response',
-             {'data': msg[2], 'count': session['receive_count'], 'whisper': 'true', 'target':msg[1], 'sender': session['nick']},
+             {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
              room=session['uid'])
 
     elif message['data'][:5] == '/help':
