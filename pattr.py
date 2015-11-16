@@ -4,10 +4,8 @@ import os
 from gevent import monkey
 monkey.patch_all()
 
-import time
 import string
 import random
-from threading import Thread
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO, emit, join_room, disconnect
 import stripe
@@ -28,23 +26,8 @@ stripe.api_key = stripe_keys['secret_key']
 connected_users = {}
 
 
-def background_thread():
-    """Example of how to send server generated events to clients."""
-    count = 0
-    while True:
-        time.sleep(10)
-        count += 1
-        socketio.emit('my response',
-                      {'data': 'Server generated event', 'count': count},
-                      namespace='/test')
-
-
 @app.route('/')
 def index():
-    global thread
-    if thread is None:
-        thread = Thread(target=background_thread)
-        thread.start()
     return render_template('index.html', key=stripe_keys['publishable_key'])
 
 
@@ -101,14 +84,13 @@ def charge():
 def join(message):
     join_room(message['room'])
     session['room'] = message['room']
-    session['receive_count'] = session.get('receive_count', 0) + 1
     indiv_msg = 'Joined room /c/' + session['room'] + '. For help, type <code>/help</code>. To learn more about Pattr, type <code>/about</code>.'
     gr_msg = session['nick'] + ' has joined the room.'
     emit('my response',
-         {'data': indiv_msg, 'count': session['receive_count'], 'bot': 'true'},
+         {'data': indiv_msg, 'bot': 'true'},
          room=session['uid'])
     emit('my response',
-         {'data': gr_msg, 'count': session['receive_count'], 'bot': 'true'},
+         {'data': gr_msg, 'bot': 'true'},
          room=session['room'])
 
 
@@ -123,18 +105,8 @@ def nick_passes(nickname):
         return True
 
 
-def msg_passes(msg):
-    if '<' in msg or '>' in msg:
-        return False
-    elif len(msg) == 0:
-        return False
-    else:
-        return True
-
-
 @socketio.on('send message', namespace='')
 def send_room_message(message):
-    session['receive_count'] = session.get('receive_count', 0) + 1
     if message['data'][:1] == '/':
         if message['data'][:5] == '/nick':
             nick = "".join(message['data'][6:].split())
@@ -144,12 +116,12 @@ def send_room_message(message):
                 connected_users[session['room']][session['uid']] = nick
                 message['data'] = temp_old + ' changed nickname to ' + session['nick']
                 emit('my response',
-                     {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                     {'data': message['data'], 'bot': 'true'},
                      room=session['room'])
             else:
                 message['data'] = 'Error: Nickname is already in use, or uses restricted characters. To learn more, type <code>/help</code>.'
                 emit('my response',
-                     {'data': message['data'], 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                     {'data': message['data'], 'bot': 'true'},
                      room=session['uid'])
 
         elif message['data'][:2] == '/w':
@@ -159,7 +131,7 @@ def send_room_message(message):
             if '<' in message or '>' in message:
                 message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
                 emit('my response',
-                     {'data': message, 'count': session['receive_count'], 'bot': 'true'},
+                     {'data': message, 'bot': 'true'},
                      room=session['uid'])
             else:
                 for item in connected_users[session['room']]:
@@ -168,19 +140,19 @@ def send_room_message(message):
                 if target_uid == '':
                     message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'bot': 'true'},
+                         {'data': message, 'bot': 'true'},
                          room=session['uid'])
                 elif target_uid == session['uid']:
                     message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'bot': 'true'},
+                         {'data': message, 'bot': 'true'},
                          room=session['uid'])
                 else:
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                          room=target_uid)
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                          room=session['uid'])
 
         elif message['data'][:5] == '/help':
@@ -194,7 +166,7 @@ def send_room_message(message):
             <p><b>Users:</b> <code>/users</code></p>\
             <p>View online users in the room.</p>'
             emit('my response',
-                 {'data': help_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                 {'data': help_text, 'bot': 'true'},
                  room=session['uid'])
 
         elif message['data'][:6] == '/about':
@@ -206,7 +178,7 @@ def send_room_message(message):
              <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
              <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
             emit('my response',
-                 {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                 {'data': about_text, 'bot': 'true'},
                  room=session['uid'])
 
         elif message['data'][:6] == '/users':
@@ -215,22 +187,22 @@ def send_room_message(message):
                 users.append(connected_users[session['room']][item])
             user_list_text = '<h2><strong>Users (' + str(len(users)) + ')</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
             emit('my response',
-                 {'data': user_list_text, 'count': session['receive_count'], 'bot': 'true'},
+                 {'data': user_list_text, 'bot': 'true'},
                  room=session['uid'])
         else:
             msg = 'Command not found. For more information, type <code>/help</code>.'
             emit('my response',
-                 {'data': msg, 'count': session['receive_count'], 'bot': 'true'},
+                 {'data': msg, 'bot': 'true'},
                  room=session['uid'])
     else:
         if '<' in message['data'] or '>' in message['data']:
             msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
             emit('my response',
-                 {'data': msg, 'count': session['receive_count'], 'bot': 'true'},
+                 {'data': msg, 'bot': 'true'},
                  room=session['uid'])
         else:
             emit('my response',
-                 {'data': message['data'], 'count': session['receive_count'], 'sender': session['nick']},
+                 {'data': message['data'], 'sender': session['nick']},
                  room=session['room'])
 
 
@@ -241,10 +213,10 @@ def disconnect_request():
     gr_msg = session['nick'] + ' has disconnected.'
     del connected_users[session['room']][session['uid']]
     emit('my response',
-         {'data': indiv_msg, 'count': session['receive_count'], 'bot': 'true'}, room=session['uid'])
+         {'data': indiv_msg, 'bot': 'true'}, room=session['uid'])
     disconnect()
     emit('my response',
-         {'data': gr_msg, 'count': session['receive_count'], 'bot': 'true'}, room=session['room'])
+         {'data': gr_msg, 'bot': 'true'}, room=session['room'])
     render_template('index.html')
 
 
