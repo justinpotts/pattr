@@ -31,6 +31,11 @@ def index():
     return render_template('index.html', key=stripe_keys['publishable_key'])
 
 
+@app.route('/tos')
+def tos():
+    return render_template('tos.html')
+
+
 def generate_id():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(36))
 
