@@ -1,9 +1,0 @@
-{% extends "layout.html" %}
-{% block body %}
-    <form id="join-room" method="POST" action='/joinroom'>
-        <input type="text" name="join-room" id="join-room" placeholder="Room Code">
-        <input type="submit" value="Join room">
-    </form>
-    <a href=/chat type=button>Create room</a>
-    {{ room }}
-{% endblock %}
