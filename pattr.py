@@ -1,12 +1,15 @@
+#!/usr/bin/env python
+
 import os
 from gevent import monkey
 monkey.patch_all()
 
-import time, string, random
+import time
+import string
+import random
 from threading import Thread
 from flask import Flask, render_template, session, request, redirect
-from flask_socketio import SocketIO, emit, join_room, leave_room, \
-    close_room, disconnect
+from flask_socketio import SocketIO, emit, join_room, disconnect
 import stripe
 
 app = Flask(__name__)
@@ -16,8 +19,8 @@ socketio = SocketIO(app)
 thread = None
 
 stripe_keys = {
-    'publishable_key':os.environ.get("PUBLISHABLE_KEY"),
-    'secret_key':os.environ.get("SECRET_KEY")
+    'publishable_key': os.environ.get("PUBLISHABLE_KEY"),
+    'secret_key': os.environ.get("SECRET_KEY")
 }
 
 stripe.api_key = stripe_keys['secret_key']
@@ -35,6 +38,7 @@ def background_thread():
                       {'data': 'Server generated event', 'count': count},
                       namespace='/test')
 
+
 @app.route('/')
 def index():
     global thread
@@ -43,8 +47,10 @@ def index():
         thread.start()
     return render_template('index.html', key=stripe_keys['publishable_key'])
 
+
 def generate_id():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(36))
+
 
 def generate_nick():
     animals = ['buffalo', 'wildebeest', 'kudu', 'springbok', 'impala', 'antelope', 'lion', 'leopard', 'cheetah', 'serval',
@@ -54,12 +60,13 @@ def generate_nick():
                   'old', 'pleasant', 'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing',
                   'jolly', 'mystic']
 
-    return 'pa-' + adjectives[random.randint(0,len(adjectives)-1)] + animals[random.randint(0,len(animals)-1)]
+    return 'pa-' + adjectives[random.randint(0, len(adjectives) - 1)] + animals[random.randint(0, len(animals) - 1)]
+
 
 @app.route('/c/<roomcode>')
 def enter_chat(roomcode):
-    if request.url == 'http://pattr.me/c/'+roomcode or request.url == 'http://www.pattr.me/c/'+roomcode:
-        return redirect('http://chat.pattr.me/c/'+roomcode)
+    if request.url == 'http://pattr.me/c/' + roomcode or request.url == 'http://www.pattr.me/c/' + roomcode:
+        return redirect('http://chat.pattr.me/c/' + roomcode)
     else:
         session['uid'] = generate_id()
         session['nick'] = generate_nick()
@@ -67,8 +74,9 @@ def enter_chat(roomcode):
         try:
             connected_users[session['room']][session['uid']] = session['nick']
         except KeyError:
-            connected_users[session['room']] = {session['uid']:session['nick']}
+            connected_users[session['room']] = {session['uid']: session['nick']}
         return render_template('chat.html')
+
 
 @app.route('/donate', methods=['POST'])
 def charge():
@@ -89,7 +97,6 @@ def charge():
     return redirect('/')
 
 
-
 @socketio.on('join', namespace='')
 def join(message):
     join_room(message['room'])
@@ -104,6 +111,7 @@ def join(message):
          {'data': gr_msg, 'count': session['receive_count'], 'bot': 'true'},
          room=session['room'])
 
+
 def nick_passes(nickname):
     if '<' in nickname or '>' in nickname:
         return False
@@ -114,6 +122,7 @@ def nick_passes(nickname):
     else:
         return True
 
+
 def msg_passes(msg):
     if '<' in msg or '>' in msg:
         return False
@@ -121,6 +130,7 @@ def msg_passes(msg):
         return False
     else:
         return True
+
 
 @socketio.on('send message', namespace='')
 def send_room_message(message):
@@ -130,7 +140,7 @@ def send_room_message(message):
             nick = "".join(message['data'][6:].split())
             if nick_passes(nick):
                 temp_old = session['nick']
-                session['nick'] =  nick
+                session['nick'] = nick
                 connected_users[session['room']][session['uid']] = nick
                 message['data'] = temp_old + ' changed nickname to ' + session['nick']
                 emit('my response',
@@ -149,7 +159,7 @@ def send_room_message(message):
             if '<' in message or '>' in message:
                 message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
                 emit('my response',
-                     {'data': message, 'count': session['receive_count'], 'bot':'true'},
+                     {'data': message, 'count': session['receive_count'], 'bot': 'true'},
                      room=session['uid'])
             else:
                 for item in connected_users[session['room']]:
@@ -167,10 +177,10 @@ def send_room_message(message):
                          room=session['uid'])
                 else:
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                          room=target_uid)
                     emit('my response',
-                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target':data[1], 'sender': session['nick']},
+                         {'data': message, 'count': session['receive_count'], 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                          room=session['uid'])
 
         elif message['data'][:5] == '/help':
@@ -188,16 +198,16 @@ def send_room_message(message):
                  room=session['uid'])
 
         elif message['data'][:6] == '/about':
-             about_text = '\
+            about_text = '\
              <h2><strong>About</strong></h2> \
              <p><span style="font-family:Aller">pattr</span> was developed by \
              <a href="https://twitter.com/PottsJustin">Justin Potts</a>, and <a href="https://twitter.com/thealexmeza">Alex Meza</a> \
              under the BSD Open Source license.</p> \
              <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
              <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
-             emit('my response',
-                  {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
-                  room=session['uid'])
+            emit('my response',
+                 {'data': about_text, 'count': session['receive_count'], 'bot': 'true', 'sender': session['nick']},
+                 room=session['uid'])
 
         elif message['data'][:6] == '/users':
             users = []
@@ -216,12 +226,12 @@ def send_room_message(message):
         if '<' in message['data'] or '>' in message['data']:
             msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
             emit('my response',
-                 {'data': msg, 'count': session['receive_count'], 'bot':'true'},
+                 {'data': msg, 'count': session['receive_count'], 'bot': 'true'},
                  room=session['uid'])
         else:
             emit('my response',
-             {'data': message['data'], 'count': session['receive_count'], 'sender': session['nick']},
-             room=session['room'])
+                 {'data': message['data'], 'count': session['receive_count'], 'sender': session['nick']},
+                 room=session['room'])
 
 
 @socketio.on('disconnect request', namespace='')
@@ -242,7 +252,6 @@ def disconnect_request():
 def connect():
     join_room(session['uid'])
     emit('my response', {'data': 'Connection successful...', 'count': 0, 'bot': 'true'})
-
 
 
 if __name__ == '__main__':
