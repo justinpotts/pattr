@@ -5,7 +5,7 @@ monkey.patch_all()
 import time, string, random
 from threading import Thread
 from flask import Flask, render_template, session, request, redirect
-from flask.ext.socketio import SocketIO, emit, join_room, leave_room, \
+from flask_socketio import SocketIO, emit, join_room, leave_room, \
     close_room, disconnect
 import stripe
 
