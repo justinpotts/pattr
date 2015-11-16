@@ -63,16 +63,16 @@ ga('send', 'pageview');
         if (window.location.href.indexOf('chat') > -1) {
             window.location.href='http://pattr.me';
         }
-    }
+    });
     $(function(){
         $(".element").typed({
             strings: ["Welcome to pattr"],
             typeSpeed: 40
 
         });
-        setTimeout(function item(){$(".typed-cursor").fadeOut(300)}, 2300)
-        setTimeout(function item(){$(".element").fadeOut(500)}, 2500)
-        setTimeout(function item(){$("#main-name").fadeIn(800)}, 3010)
+        setTimeout(function item(){$(".typed-cursor").fadeOut(300)}, 2300);
+        setTimeout(function item(){$(".element").fadeOut(500)}, 2500);
+        setTimeout(function item(){$("#main-name").fadeIn(800)}, 3010);
 
     });
     function startChat() {
@@ -182,27 +182,15 @@ ga('send', 'pageview');
 
         <div class="pure-g">
             <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
-                <form class="pure-form pure-form-stacked">
-                    <fieldset>
-
-                        <label for="name">Your Name</label>
-                        <input id="name" type="text" placeholder="Your Name">
-
-
-                        <label for="email">Your Email</label>
-                        <input id="email" type="email" placeholder="Your Email">
-
-                        <p>
-                        <label for="password">Donation amount:</label>
-                        <select>
-                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Cup of coffee ($5)</a></option>
-                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Lunch ($10)</a></option>
-                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Three burritos ($25)</a></option>
-                            <option class="pure-menu-item"><a href="#" class="pure-menu-link">Concert tickets ($50)</a></option>
-                        </select></p>
-                        <a href="#Donate" type="button" class="pure-button">Donate</a>
-                    </fieldset>
+                <form action="/donate" method="post">
+                    <center><strong><h2>Help support Pattr. Buy us a cup of coffee.</h2></strong>
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                data-key="{{ key }}"
+                data-description="Pattr Donation"
+                data-amount="500"
+                data-locale="auto"></script>
                 </form>
+                </center>
             </div>
 
             <div class="l-box-lrg pure-u-1 pure-u-md-3-5">

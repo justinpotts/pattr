@@ -7,12 +7,20 @@ from threading import Thread
 from flask import Flask, render_template, session, request, redirect
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room, \
     close_room, disconnect
+import stripe
 
 app = Flask(__name__)
 app.debug = True
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 thread = None
+
+stripe_keys = {
+    'publishable_key':os.environ.get("PUBLISHABLE_KEY"),
+    'secret_key':os.environ.get("SECRET_KEY")
+}
+
+stripe.api_key = stripe_keys['secret_key']
 
 connected_users = {}
 
@@ -33,7 +41,7 @@ def index():
     if thread is None:
         thread = Thread(target=background_thread)
         thread.start()
-    return render_template('index.html')
+    return render_template('index.html', key=stripe_keys['publishable_key'])
 
 def generate_id():
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(36))
@@ -61,6 +69,25 @@ def enter_chat(roomcode):
         except KeyError:
             connected_users[session['room']] = {session['uid']:session['nick']}
         return render_template('chat.html')
+
+@app.route('/donate', methods=['POST'])
+def charge():
+    # Amount in cents
+    amount = 500
+
+    customer = stripe.Customer.create(
+        card=request.form['stripeToken']
+    )
+
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=amount,
+        currency='usd',
+        description='Pattr Donation'
+    )
+
+    return redirect('/')
+
 
 
 @socketio.on('join', namespace='')
