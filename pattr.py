@@ -153,6 +153,13 @@ def send_room_message(message):
                          {'data': message, 'bot': 'true'},
                          room=session['uid'])
                 else:
+                    if 'http://' in message or 'https://' in message:
+                        m = message.split(' ')
+                        url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+                        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+                        for loc in url_locs:
+                            m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+                        message = ' '.join(m)
                     emit('my response',
                          {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                          room=target_uid)
@@ -194,17 +201,31 @@ def send_room_message(message):
             emit('my response',
                  {'data': user_list_text, 'bot': 'true'},
                  room=session['uid'])
+
         else:
             msg = 'Command not found. For more information, type <code>/help</code>.'
             emit('my response',
                  {'data': msg, 'bot': 'true'},
                  room=session['uid'])
+
     else:
         if '<' in message['data'] or '>' in message['data']:
             msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
             emit('my response',
                  {'data': msg, 'bot': 'true'},
                  room=session['uid'])
+
+        elif 'http://' in message['data'] or 'https://' in message['data']:
+            m = message['data'].split(' ')
+            url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+            url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+            for loc in url_locs:
+                m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+            message = ' '.join(m)
+            emit('my response',
+                 {'data': message, 'sender': session['nick']},
+                 room=session['room'])
+
         else:
             emit('my response',
                  {'data': message['data'], 'sender': session['nick']},
