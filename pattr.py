@@ -156,6 +156,7 @@ def send_room_message(message):
                     if 'http://' in message or 'https://' in message:
                         m = message.split(' ')
                         url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+                        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
                         for loc in url_locs:
                             m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
                         message = ' '.join(m)
@@ -217,6 +218,7 @@ def send_room_message(message):
         elif 'http://' in message['data'] or 'https://' in message['data']:
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+            url_locs += [i for i, s in enumerate(m) if 'https://' in s]
             for loc in url_locs:
                 m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
             message = ' '.join(m)
