@@ -153,10 +153,11 @@ def send_room_message(message):
                          {'data': message, 'bot': 'true'},
                          room=session['uid'])
                 else:
-                    if 'http://' in message or 'https://' in message:
+                    if 'http://' in message or 'https://' in message or "www." in message:
                         m = message.split(' ')
                         url_locs = [i for i, s in enumerate(m) if 'http://' in s]
                         url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+                        url_locs += [i for i, 'http://' + s in enumerate(m) if 'www.' in s]
                         for loc in url_locs:
                             m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
                         message = ' '.join(m)
