@@ -242,5 +242,15 @@ def connect():
     emit('my response', {'data': 'Connection successful...', 'count': 0, 'bot': 'true'})
 
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html', e=e), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('error.html', e=e), 500
+
+
 if __name__ == '__main__':
     socketio.run(app, host='0.0.0.0', port=int(os.environ.get("PORT", 33507)))
