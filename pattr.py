@@ -6,6 +6,7 @@ monkey.patch_all()
 
 import string
 import random
+from cgi import escape
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO, emit, join_room, disconnect
 import stripe
@@ -100,9 +101,7 @@ def join(message):
 
 
 def nick_passes(nickname):
-    if '<' in nickname or '>' in nickname:
-        return False
-    elif nickname in connected_users[session['room']].values():
+    if nickname in connected_users[session['room']].values():
         return False
     elif len(nickname) == 0:
         return False
@@ -112,6 +111,7 @@ def nick_passes(nickname):
 
 @socketio.on('send message', namespace='')
 def send_room_message(message):
+    message['data'] = escape(message['data'])
     if message['data'][:1] == '/':
         if message['data'][:5] == '/nick':
             nick = "".join(message['data'][6:].split())
@@ -133,11 +133,6 @@ def send_room_message(message):
             data = message['data'][2:].split(' ')
             message = ' '.join(data[2:])
             target_uid = ''
-            if '<' in message or '>' in message:
-                message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
-                emit('my response',
-                     {'data': message, 'bot': 'true'},
-                     room=session['uid'])
             else:
                 for item in connected_users[session['room']]:
                     if connected_users[session['room']][item] == data[1]:
@@ -209,13 +204,7 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
-        if '<' in message['data'] or '>' in message['data']:
-            msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
-            emit('my response',
-                 {'data': msg, 'bot': 'true'},
-                 room=session['uid'])
-
-        elif 'http://' in message['data'] or 'https://' in message['data']:
+        if 'http://' in message['data'] or 'https://' in message['data']:
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
             url_locs += [i for i, s in enumerate(m) if 'https://' in s]
