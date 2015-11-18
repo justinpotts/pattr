@@ -106,6 +106,8 @@ def nick_passes(nickname):
         return False
     elif len(nickname) == 0:
         return False
+    elif nickname == 'pattrbot':
+        return False
     else:
         return True
 
