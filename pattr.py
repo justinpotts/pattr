@@ -169,13 +169,13 @@ def send_room_message(message):
 
         elif message['data'][:5] == '/help':
             help_text = '\
-            <h2><strong>Help</strong></h2>\
-            <p><b>Change Nickname:</b> <code>/nick nickname</code></p>\
-            <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>. \
-            Nicknames must be unique, so duplicate nicknames will produce an error.</p>\
-            <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
-            <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
-            <p><b>Users:</b> <code>/users</code></p>\
+            <h2><strong>Help</strong></h2> \
+            <p><b>Change Nickname:</b> <code>/nick nickname</code></p> \
+            <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>.</p> \
+            <p>Nicknames must be unique, so duplicate nicknames will produce an error.</p> \
+            <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p> \
+            <p>A whisper is a private message and can only be seen by the user with the target nickname.</p> \
+            <p><b>Users:</b> <code>/users</code></p> \
             <p>View online users in the room.</p>'
             emit('my response',
                  {'data': help_text, 'bot': 'true'},
