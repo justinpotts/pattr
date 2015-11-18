@@ -135,34 +135,33 @@ def send_room_message(message):
             data = message['data'][2:].split(' ')
             message = ' '.join(data[2:])
             target_uid = ''
+            for item in connected_users[session['room']]:
+                if connected_users[session['room']][item] == data[1]:
+                    target_uid = item
+            if target_uid == '':
+                message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
+                emit('my response',
+                     {'data': message, 'bot': 'true'},
+                     room=session['uid'])
+            elif target_uid == session['uid']:
+                message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
+                emit('my response',
+                     {'data': message, 'bot': 'true'},
+                     room=session['uid'])
             else:
-                for item in connected_users[session['room']]:
-                    if connected_users[session['room']][item] == data[1]:
-                        target_uid = item
-                if target_uid == '':
-                    message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
-                    emit('my response',
-                         {'data': message, 'bot': 'true'},
-                         room=session['uid'])
-                elif target_uid == session['uid']:
-                    message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
-                    emit('my response',
-                         {'data': message, 'bot': 'true'},
-                         room=session['uid'])
-                else:
-                    if 'http://' in message or 'https://' in message:
-                        m = message.split(' ')
-                        url_locs = [i for i, s in enumerate(m) if 'http://' in s]
-                        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
-                        for loc in url_locs:
-                            m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
-                        message = ' '.join(m)
-                    emit('my response',
-                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
-                         room=target_uid)
-                    emit('my response',
-                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
-                         room=session['uid'])
+                if 'http://' in message or 'https://' in message:
+                    m = message.split(' ')
+                    url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+                    url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+                    for loc in url_locs:
+                        m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+                    message = ' '.join(m)
+                emit('my response',
+                     {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                     room=target_uid)
+                emit('my response',
+                     {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                     room=session['uid'])
 
         elif message['data'][:5] == '/help':
             help_text = '\
