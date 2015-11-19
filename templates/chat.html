@@ -88,6 +88,19 @@
           </form>
         </h2>
       </div>
+      <div class="campaign-footer">
+        <h3>Support SSL Encryption for just $1</h3>
+        <form action="/donatessl" method="post">
+          <center>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{ key }}"
+              data-description="Pattr SSL Donation"
+              data-amount="100"
+              data-locale="auto"></script>
+          </center>
+        </form>
+        <p><a href="/ssl" style="color:white;">Learn more</a></p>
+      </div>
     </div>
     <div class="content pure-u-1 pure-u-md-3-4">
       <div class="chat">

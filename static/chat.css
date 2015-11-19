@@ -222,6 +222,15 @@ h3 {
     border: none;
 }
 
+.campaign-footer {
+  position:fixed;
+  bottom:0;
+  width:inherit;
+  background:#6CC644;
+  position:inherit;
+  text-align:center;
+}
+
 @font-face {
   font-family: "Aller";
   src: url(Aller_Std_Bd.ttf) format("truetype");

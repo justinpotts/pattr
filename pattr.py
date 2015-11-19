@@ -64,7 +64,7 @@ def enter_chat(roomcode):
             connected_users[session['room']][session['uid']] = session['nick']
         except KeyError:
             connected_users[session['room']] = {session['uid']: session['nick']}
-        return render_template('chat.html')
+        return render_template('chat.html', key=stripe_keys['publishable_key'])
 
 
 @app.route('/donate', methods=['POST'])
@@ -224,6 +224,7 @@ def send_room_message(message):
 
 @socketio.on('disconnect request', namespace='')
 def disconnect_request():
+    session['donated'] = False
     session['receive_count'] = session.get('receive_count', 0) + 1
     indiv_msg = 'You have disconnected.'
     gr_msg = session['nick'] + ' has disconnected.'
@@ -240,6 +241,31 @@ def disconnect_request():
 def connect():
     join_room(session['uid'])
     emit('my response', {'data': 'Connection successful...', 'count': 0, 'bot': 'true'})
+
+
+@app.route('/donatessl', methods=['POST'])
+def donate_ssl():
+    # Amount in cents
+    amount = 500
+
+    customer = stripe.Customer.create(
+        card=request.form['stripeToken']
+    )
+
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=amount,
+        currency='usd',
+        description='Pattr Donation'
+    )
+
+    session['donated'] = True
+    return redirect('/')
+
+
+@app.route('/ssl')
+def ssl():
+    return render_template('ssl.html', key=stripe_keys['publishable_key'])
 
 
 @app.errorhandler(404)

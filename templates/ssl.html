@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pattr SSL Donation Campaign.">
+
+  <title>Pattr &ndash; SSL</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='marketing.css') }}">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+</head>
+<body>
+    <div class="header">
+        <div class="home-menu pure-menu pure-menu-horizontal pure-menu-fixed">
+            <a href="/" style="text-decoration:none;"><center><h1 style="font-family:Aller"><span style="color:lime">&middot;</span><span style="color:white">pattr</span></h1></center></a>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <center>
+        <div style="width:50%; text-align:left">
+            <h2 class="content-head is-center">SSL Initiative</h2>
+
+            <p>
+              As a company, Pattr believes in providing our users with the highest
+              possible security, which is why our team is hard at work building upon and
+              improving Pattr's security, including efforts such as message encryption
+              and password protection.
+            </p>
+
+            <p>
+              As part of this process, we have decided to upgrade our security, by
+              intending on purchasing an SSL Certificate. SSL is a technology
+              that allows data traveling between its users and the server to be
+              transmitted securely and encrypted.
+            </p>
+
+            <p>
+              While we don't store messages on our servers, we do pass the messages
+              through, scanning for certain commands such as '/nick', or '/users'.
+              This <strong>does not</strong> store any messages on our servers, and
+              we intend to keep it that way in effort to promote the highest security
+              and enjoyable user experience and trust.
+            </p>
+
+            <p>
+              SSL Certificates are not cheap, and we need your help to purchase one.
+              If every user donates $1, we will have enough money to buy the certificate,
+              enabling HTTPS on our website and allowing for a more secure transaction
+              between Pattr and its users.
+            </p>
+
+            <h2 class="content-head is-center">Donate $1 and help us help you.</h2>
+
+            <form action="/donatessl" method="post">
+              <center>
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ key }}"
+                  data-description="Pattr SSL Donation"
+                  data-amount="100"
+                  data-locale="auto"></script>
+              </center>
+            </form>
+
+            <br>
+            <hr>
+
+            <h3 class="content-head is-center">Feeling generous? How about $5?</h3>
+
+            <form action="/donate" method="post">
+              <center>
+                <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                  data-key="{{ key }}"
+                  data-description="Pattr SSL Donation"
+                  data-amount="500"
+                  data-locale="auto"></script>
+              </center>
+            </form>
+            <br>
+        </div>
+        <div class="footer l-box is-center">
+          Open source and developed by Justin Potts and Alex Meza.
+          <br>
+          View the code <a href="https://github.com/justinpotts/pattr/">here</a>.
+          <br>
+          <a href="mailto:pattr@pattr.me">Contact us</a> | <a href="https://github.com/justinpotts/pattr/">Contribute</a> | <a href="/tos">Legal</a>
+        </div>
+      </div>
+    </center>
+</body>
+</html>

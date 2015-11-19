@@ -52,6 +52,33 @@
   </script>
 </head>
 <body>
+  <div class="header">
+      <div class="campaign-menu pure-menu pure-menu-horizontal pure-menu-fixed" style="text-align:center;">
+        {% if session['donated'] %}
+        <h2><span class="fa fa-check"></span></h2>
+        <h2>Thank you for your donation!</h2>
+        <p>
+          To learn more about Pattr's SSL campaign, <a href="/ssl">click here</a>.
+        </p>
+        </form>
+        {% else %}
+        <h2>Just $1 to make Pattr more secure with an SSL Encryption Certificate.</h2>
+        <p>
+          <a href="/ssl">Learn more</a> about what this means and how you can help.
+        </p>
+        <form action="/donatessl" method="post">
+          <center>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{ key }}"
+              data-description="Pattr SSL Donation"
+              data-amount="100"
+              data-locale="auto"></script>
+          </center>
+        </form>
+        {% endif %}
+        <br>
+      </div>
+    </div>
   <div class="splash-container">
     <div class="splash">
       <h1 class="splash-head" style="font-family:Aller"><span class="element"></span><div id="main-name" style="display:none"><span style="color:lime">&middot;</span>pattr</div></h1>
