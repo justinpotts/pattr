@@ -53,6 +53,7 @@ label {
  * Style the form inputs and labels
  */
 .pure-form label {
+    display:inline;
     margin: 1em 0 0;
     font-weight: bold;
     font-size: 100%;
@@ -65,6 +66,10 @@ label {
     width: 100%;
     margin-bottom: 1em;
     background: #fff url(http://i.stack.imgur.com/mJotv.gif) no-repeat right -10px center;
+}
+
+.inline {
+  display: inline-block;
 }
 
 /*

@@ -34,13 +34,7 @@
     });
 
     function startChat() {
-      var roomCode = Math.random().toString(36).slice(-8);
-      if(window.location.href == 'http://pattr.me' || window.location.href == 'http://www.pattr.me') {
-        window.location.href='http://chat.pattr.me/c/'+roomCode;
-      }
-      else {
-        window.location.href='/c/'+roomCode;
-      }
+      window.location.href='/c/'+$('#room_url').val();
     }
   </script>
   <script>
@@ -60,12 +54,11 @@
       <p class="splash-subhead">
         Truly instant private messaging. No logs, no hassle.
       </p>
-
-      <p>
-        <a onclick="startChat()" role="button" class="pure-button-primary pure-button">      <form id="send_room" method="POST" action='#' class="pure-form">
-                <h2><input name="room_url" style="width:30%;" maxlength="11" id="room_url" type="text" autofocus="true" autocomplete="off"></h2>
-              </form>Start a private chat</a>
-      </p>
+      <form class="pure-form">
+        <fieldset>
+          <h2><input onSubmit=startChat() type="text" maxlength=11 placeholder="Room Code" id="room_url" style="width:25%; display:inline-block;"></h2>
+        </fieldset>
+      </form>
     </div>
   </div>
   <div class="content-wrapper">
