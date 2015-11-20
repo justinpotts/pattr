@@ -246,7 +246,7 @@ def connect():
 @app.route('/donatessl', methods=['POST'])
 def donate_ssl():
     # Amount in cents
-    amount = 500
+    amount = 100
 
     customer = stripe.Customer.create(
         card=request.form['stripeToken']
