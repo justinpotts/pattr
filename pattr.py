@@ -216,7 +216,9 @@ def send_room_message(message):
                  {'data': message, 'sender': session['nick']},
                  room=session['room'])
 
-        elif 'www.' in message['data'] and '.com' in message['data']:
+        elif ('www.' in message['data'] and ('.com' in message['data'] or '.net' in message['data'] or '.edu' in message['data'] or '.gov' in message['data']
+        or '.io' in message['data'] or '.uk' in message['data'] or '.ca' in message['data'] or '.de' in message['data'] or '.fr' in message['data'] or '.us' in message['data']
+        or '.it' in message['data'] or '.biz' in message['data'] or '.xyz' in message['data'] or '.co' in message['data'] or '.me' in message['data'])):
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'www.' in s]
             for loc in url_locs:
