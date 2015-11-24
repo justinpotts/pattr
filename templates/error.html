@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Pattr &ndash; Error</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
+  <link rel=stylesheet type="text/css" href="{{ url_for('static', filename='marketing.css') }}">
+  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+
+  <script src="{{ url_for('static', filename='jquery-2.1.4.min.js')}}"></script>
+  <script src="{{ url_for('static', filename='typed.js')}}"></script>
+  <script type="text/javascript">
+    $(function(){
+      $("#error-text").fadeIn(800)
+      $(".element").typed({
+        strings: ["Look what we've done."],
+        typeSpeed: 40
+      });
+      setTimeout(function item(){$("#message-text").fadeIn(800)}, 2000);
+      setTimeout(function item(){$("#issue-text").fadeIn(800)}, 3000);
+    });
+  </script>
+</head>
+<body style="background-color:#2d3e50;">
+  <div class="splash-container">
+    <div class="splash">
+      <h1 class="splash-subhead" id="error-text" style="display:none;">
+        {{ e }}
+      </h1>
+      <h1 style="font-family:Aller; color:white;"><span class="element"></span><div id="main-name" style="display:none"><span style="color:lime">&middot;</span>pattr</div></h1>
+      <p id="message-text" style="display:none;">
+        The least we can do is <a href="/" style="color:white;">return you to the home page.</a>
+      </p>
+      <p id="issue-text" style="display:none;">
+        Or you can help us and <a href="https://github.com/justinpotts/pattr/issues/new" style="color:white;">report an issue</a>.
+      </p>
+    </div>
+  </div>
+</body>
+</html>

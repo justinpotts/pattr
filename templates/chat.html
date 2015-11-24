@@ -1,156 +1,118 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="A layout example that shows off a blog page with a list of posts.">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Truly instant private messaging. No logs, no hassle.">
 
-    <title>Pattr &ndash; Chat</title>
+  <title>Pattr &ndash; Chat</title>
 
+  <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css') }}">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
-
-
-<link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
-
-
-
-<!--[if lte IE 8]>
-
-    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-old-ie-min.css">
-
-<![endif]-->
-<!--[if gt IE 8]><!-->
-
-    <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
-
-<!--<![endif]-->
-
-
-
-
-
-
-    <!--[if lte IE 8]>
-        <link rel="stylesheet" href="css/layouts/blog-old-ie.css">
-    <![endif]-->
-    <!--[if gt IE 8]><!-->
-        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='chat.css') }}">
-    <!--<![endif]-->
-
-    <script type="text/javascript" src="//code.jquery.com/jquery-1.9.1.min.js"></script>
-    <script src="{{ url_for('static', filename='bootstrap.min.js')}}"></script>
-    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
-    <script type="text/javascript" charset="utf-8">
-        namespace = ''; // change to an empty string to use the global namespace
-
-        // the socket.io documentation recommends sending an explicit package upon connection
-        // this is specially important when using the global namespace
-        var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
-        $(document).ready(function(){
-            // event handler for server sent data
-            // the data is displayed in the "Received" section of the page
-            socket.on('my response', function(msg) {
-                if(msg.bot == 'true') {
-                    $('#log').append('<div class="posts"><h1 class="name-sender">pattrbot</h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
-                }
-                else if(msg.whisper == 'true') {
-                    $('#log').append('<div class="posts"><section class="post"><div class="post-description"><p><strong>' + msg.sender +' whispers "' + msg.data + '" to ' + msg.target + '</strong></p></div></section></div>');
-                }
-                else if(msg.sender == '{{ session["nick"] }}') {
-                    $('#log').append('<div class="posts"><h1 class="name-self-sent"><span class=post-title-sent>' + msg.sender + '</span></h1><section class="post"><div class="post-description"><p><strong>'+ msg.data +'</strong></p></div></section></div>');
-                }
-                else {
-                    $('#log').append('<div class="posts"><h1 class="name-sender"><strong>' + msg.sender + '</strong></h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
-                }
-                $('.chat').scrollTop($('.chat').prop("scrollHeight"));
-            });
-
-            // event handler for new connections
-            socket.on('connect', function() {
-                socket.emit('join', {room: '{{ session["room"] }}'});
-                return false;
-            });
-            // handlers for the different forms in the page
-            // these send data to the server in a variety of ways
-            $('form#send_room').submit(function(event) {
-                if($('#msg_data').val().length > 0) {
-                    socket.emit('send message', {room: '{{ session["room"] }}', data: $('#msg_data').val()});
-                    $('#msg_data').val('');
-                    return false;
-                }
-                return false;
-            });
-            $('form#set_nick').submit(function(event) {
-                socket.emit('send message', {room: '{{ session["room"] }}', data: $('#nickname').val()});
-                return false;
-            });
-            $('form#disconnect').submit(function(event) {
-                socket.emit('disconnect request');
-                if(window.location.href.indexOf('chat.pattr.me') > -1) {
-                    window.location.href='http://pattr.me/';
-                }
-                else {
-                    window.location.href='/';
-                }
-                return false;
-            });
-        });
-        function disconnect() {
-            socket.emit('disconnect request');
-            return false;
+  <script src="{{ url_for('static', filename='jquery-2.1.4.min.js')}}"></script>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+  <script type="text/javascript" charset="utf-8">
+    namespace = '';
+    var socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port + namespace);
+    $(document).ready(function(){
+      socket.on('my response', function(msg) {
+        if(msg.bot == 'true') {
+          $('#log').append('<div class="posts"><h1 class="name-sender">pattrbot</h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
         }
+        else if(msg.whisper == 'true') {
+          $('#log').append('<div class="posts"><section class="post"><div class="post-description"><p><strong>' + msg.sender +' whispers "' + msg.data + '" to ' + msg.target + '</strong></p></div></section></div>');
+        }
+        else if(msg.sender == '{{ session["nick"] }}') {
+          $('#log').append('<div class="posts"><h1 class="name-self-sent"><span class=post-title-sent>' + msg.sender + '</span></h1><section class="post"><div class="post-description"><p><strong>'+ msg.data +'</strong></p></div></section></div>');
+        }
+        else {
+          $('#log').append('<div class="posts"><h1 class="name-sender"><strong>' + msg.sender + '</strong></h1><section class="post"><div class="post-description"><p>'+ msg.data +'</p></div></section></div>');
+        }
+        $('.chat').scrollTop($('.chat').prop("scrollHeight"));
+      });
+      socket.on('connect', function() {
+        socket.emit('join', {room: '{{ session["room"] }}'});
+        return false;
+      });
+      $('form#send_room').submit(function(event) {
+        if($('#msg_data').val().length > 0) {
+          socket.emit('send message', {room: '{{ session["room"] }}', data: $('#msg_data').val()});
+          $('#msg_data').val('');
+          return false;
+        }
+        return false;
+      });
+      $('form#set_nick').submit(function(event) {
+        socket.emit('send message', {room: '{{ session["room"] }}', data: $('#nickname').val()});
+        return false;
+      });
+      $('form#disconnect').submit(function(event) {
+        socket.emit('disconnect request');
+        if(window.location.href.indexOf('chat.pattr.me') > -1) {
+          window.location.href='http://pattr.me/';
+        }
+        else {
+          window.location.href='/';
+        }
+        return false;
+      });
+    });
+    function disconnect() {
+      socket.emit('disconnect request');
+      return false;
+    }
     </script>
-    <script>
-        $("#share-link").click(function( event ) {
-            $( "#link" ).select();
-        });
-    </script>
-
-
     <script>
       (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
       })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
       ga('create', 'UA-70158941-1', 'auto');
       ga('send', 'pageview');
-
     </script>
-
-
-
 </head>
 <body onbeforeunload="disconnect()">
-
-
-
-<div id="layout" class="pure-g">
+  <div id="layout" class="pure-g">
     <div class="sidebar pure-u-1 pure-u-md-1-4">
-        <center><h1 style="font-family:Aller"><span style="color:lime">&middot;</span>pattr</h1></center>
-        <div class="header">
-            <h1 class="brand-title">Room:</h1>
-            <h2 id=link class="brand-tagline"><form id="disconnect" class="disconnect" method="POST" action="#"><button id="disconnect-button" type="submit"><span class="fa fa-trash-o"></span> {{ request.path }} </button></form></h2>
-        </div>
+      <center>
+        <h1 style="font-family:Aller"><span style="color:lime">&middot;</span>pattr</h1>
+      </center>
+      <div class="header">
+        <h1 class="brand-title">Room:</h1>
+        <h2 id="link" class="brand-tagline">
+          <form id="disconnect" class="disconnect" method="POST" action="#">
+            <button id="disconnect-button" type="submit"><span class="fa fa-trash-o"></span> {{ request.path }} </button>
+          </form>
+        </h2>
+      </div>
+      <div class="campaign-footer">
+        <h3>Support SSL Encryption for just $1</h3>
+        <form action="/donatessl" method="post">
+          <center>
+            <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+              data-key="{{ key }}"
+              data-description="Pattr SSL Donation"
+              data-amount="100"
+              data-locale="auto"></script>
+          </center>
+        </form>
+        <p><a href="/ssl" style="color:white;">Learn more</a></p>
+      </div>
     </div>
     <div class="content pure-u-1 pure-u-md-3-4">
-        <div class=chat>
-            <div id=log>
-            </div>
+      <div class="chat">
+        <div id="log">
         </div>
-        <div>
-            <form id="send_room" method="POST" action='#' class=pure-form>
-                <input name="msg_data" id="msg_data" type="text" autofocus="true" placeholder="Type something..." autocomplete="off">
-            </form>
-        </div>
+      </div>
+      <div>
+        <form id="send_room" method="POST" action='#' class="pure-form">
+          <input name="msg_data" id="msg_data" type="text" autofocus="true" placeholder="Type something..." autocomplete="off">
+        </form>
+      </div>
     </div>
-</div>
-
-
-
-
-
-
+  </div>
 </body>
 </html>

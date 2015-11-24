@@ -6,6 +6,7 @@ monkey.patch_all()
 
 import string
 import random
+from cgi import escape
 from flask import Flask, render_template, session, request, redirect
 from flask_socketio import SocketIO, emit, join_room, disconnect
 import stripe
@@ -63,7 +64,7 @@ def enter_chat(roomcode):
             connected_users[session['room']][session['uid']] = session['nick']
         except KeyError:
             connected_users[session['room']] = {session['uid']: session['nick']}
-        return render_template('chat.html')
+        return render_template('chat.html', key=stripe_keys['publishable_key'])
 
 
 @app.route('/donate', methods=['POST'])
@@ -100,9 +101,7 @@ def join(message):
 
 
 def nick_passes(nickname):
-    if '<' in nickname or '>' in nickname:
-        return False
-    elif nickname in connected_users[session['room']].values():
+    if nickname in connected_users[session['room']].values():
         return False
     elif len(nickname) == 0:
         return False
@@ -114,6 +113,7 @@ def nick_passes(nickname):
 
 @socketio.on('send message', namespace='')
 def send_room_message(message):
+    message['data'] = escape(message['data'])
     if message['data'][:1] == '/':
         if message['data'][:5] == '/nick':
             nick = "".join(message['data'][6:].split())
@@ -135,49 +135,43 @@ def send_room_message(message):
             data = message['data'][2:].split(' ')
             message = ' '.join(data[2:])
             target_uid = ''
-            if '<' in message or '>' in message:
-                message = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
+            for item in connected_users[session['room']]:
+                if connected_users[session['room']][item] == data[1]:
+                    target_uid = item
+            if target_uid == '':
+                message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
+                emit('my response',
+                     {'data': message, 'bot': 'true'},
+                     room=session['uid'])
+            elif target_uid == session['uid']:
+                message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
                 emit('my response',
                      {'data': message, 'bot': 'true'},
                      room=session['uid'])
             else:
-                for item in connected_users[session['room']]:
-                    if connected_users[session['room']][item] == data[1]:
-                        target_uid = item
-                if target_uid == '':
-                    message = 'Cannot find user ' + data[1] + '. Type <code>/users</code> to view online users.'
-                    emit('my response',
-                         {'data': message, 'bot': 'true'},
-                         room=session['uid'])
-                elif target_uid == session['uid']:
-                    message = 'You may not send a whipser to yourself. Type <code>/users</code> to view online users.'
-                    emit('my response',
-                         {'data': message, 'bot': 'true'},
-                         room=session['uid'])
-                else:
-                    if 'http://' in message or 'https://' in message:
-                        m = message.split(' ')
-                        url_locs = [i for i, s in enumerate(m) if 'http://' in s]
-                        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
-                        for loc in url_locs:
-                            m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
-                        message = ' '.join(m)
-                    emit('my response',
-                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
-                         room=target_uid)
-                    emit('my response',
-                         {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
-                         room=session['uid'])
+                if 'http://' in message or 'https://' in message:
+                    m = message.split(' ')
+                    url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+                    url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+                    for loc in url_locs:
+                        m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+                    message = ' '.join(m)
+                emit('my response',
+                     {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                     room=target_uid)
+                emit('my response',
+                     {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
+                     room=session['uid'])
 
         elif message['data'][:5] == '/help':
             help_text = '\
-            <h2><strong>Help</strong></h2>\
-            <p><b>Change Nickname:</b> <code>/nick nickname</code></p>\
-            <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>. \
-            Nicknames must be unique, so duplicate nicknames will produce an error.</p>\
-            <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p>\
-            <p>A whisper is a private message and can only be seen by the user with the target nickname.</p>\
-            <p><b>Users:</b> <code>/users</code></p>\
+            <h2><strong>Help</strong></h2> \
+            <p><b>Change Nickname:</b> <code>/nick nickname</code></p> \
+            <p>Nicknames cannot contain HTML elements or attributes, or the characters <code><</code> or <code>></code>.</p> \
+            <p>Nicknames must be unique, so duplicate nicknames will produce an error.</p> \
+            <p><b>Whisper (Private message):</b> <code>/w targetnick message</code></p> \
+            <p>A whisper is a private message and can only be seen by the user with the target nickname.</p> \
+            <p><b>Users:</b> <code>/users</code></p> \
             <p>View online users in the room.</p>'
             emit('my response',
                  {'data': help_text, 'bot': 'true'},
@@ -211,18 +205,12 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
-        if '<' in message['data'] or '>' in message['data']:
-            msg = 'Error: You\'ve entered one or more restricted characters. Please avoid < or > in your messages.'
-            emit('my response',
-                 {'data': msg, 'bot': 'true'},
-                 room=session['uid'])
-
-        elif 'http://' in message['data'] or 'https://' in message['data']:
+        if 'http://' in message['data'] or 'https://' in message['data']:
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
             url_locs += [i for i, s in enumerate(m) if 'https://' in s]
             for loc in url_locs:
-                m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+                m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
             message = ' '.join(m)
             emit('my response',
                  {'data': message, 'sender': session['nick']},
@@ -236,6 +224,7 @@ def send_room_message(message):
 
 @socketio.on('disconnect request', namespace='')
 def disconnect_request():
+    session['donated'] = False
     session['receive_count'] = session.get('receive_count', 0) + 1
     indiv_msg = 'You have disconnected.'
     gr_msg = session['nick'] + ' has disconnected.'
@@ -252,6 +241,41 @@ def disconnect_request():
 def connect():
     join_room(session['uid'])
     emit('my response', {'data': 'Connection successful...', 'count': 0, 'bot': 'true'})
+
+
+@app.route('/donatessl', methods=['POST'])
+def donate_ssl():
+    # Amount in cents
+    amount = 100
+
+    customer = stripe.Customer.create(
+        card=request.form['stripeToken']
+    )
+
+    charge = stripe.Charge.create(
+        customer=customer.id,
+        amount=amount,
+        currency='usd',
+        description='Pattr Donation'
+    )
+
+    session['donated'] = True
+    return redirect('/')
+
+
+@app.route('/ssl')
+def ssl():
+    return render_template('ssl.html', key=stripe_keys['publishable_key'])
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error.html', e=e), 404
+
+
+@app.errorhandler(500)
+def internal_server_error(e):
+    return render_template('error.html', e=e), 500
 
 
 if __name__ == '__main__':
