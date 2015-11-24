@@ -114,6 +114,7 @@ def nick_passes(nickname):
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     message['data'] = escape(message['data'])
+    message['data'].encode('ascii', 'xmlcharrefreplace')
     if message['data'][:1] == '/':
         if message['data'][:5] == '/nick':
             nick = "".join(message['data'][6:].split())
