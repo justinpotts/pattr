@@ -183,15 +183,22 @@ h3 {
     background: none;
 }
 
+.campaign-footer {
+  position:fixed;
+  bottom:0;
+  width:inherit;
+  background:#6CC644;
+  position:inherit;
+  text-align:center;
+}
 .pure-form input[type] {
     border: 2px solid #ddd;
     box-shadow: none;
     font-size: 100%;
     margin-top: 10em;
     margin-bottom: 1em;
-    width:93%;
+    width:68%;
     height:7%;
-
     outline:none;
     resize: none;
     bottom: 0px;
@@ -201,8 +208,8 @@ h3 {
 .chat {
     width: 100%;
     margin-bottom: 3em;
-    width:93%;
-    height: 50%;
+    width:68%;
+    height: 85%;
     overflow-y: scroll;
     outline:none;
     resize: none;
@@ -222,15 +229,6 @@ h3 {
     border: none;
 }
 
-.campaign-footer {
-  position:fixed;
-  bottom:0;
-  width:inherit;
-  background:#6CC644;
-  position:inherit;
-  text-align:center;
-}
-
 @font-face {
   font-family: "Aller";
   src: url(Aller_Std_Bd.ttf) format("truetype");
@@ -242,17 +240,6 @@ h3 {
         overflow: hidden;
         padding: 2em 3em 0;
         margin-left: 25%;
-    }
-
-    .chat {
-        width: 100%;
-        margin-bottom: 3em;
-        width:93%;
-        height: 85%;
-        overflow-y: scroll;
-        outline:none;
-        resize: none;
-        position: fixed;
     }
 
     .header {
