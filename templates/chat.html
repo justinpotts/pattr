@@ -10,13 +10,13 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
   <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='chat.css') }}">
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
   <script src="{{ url_for('static', filename='jquery-2.1.4.min.js')}}"></script>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
   <script type="text/javascript" charset="utf-8">
     namespace = '';
-    var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+    var socket = io.connect(('https:' == document.location.protocol ? 'https://' : 'http://') + document.domain + ':' + location.port + namespace);
     $(document).ready(function(){
       socket.on('my response', function(msg) {
         if(msg.bot == 'true') {
