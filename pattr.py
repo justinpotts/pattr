@@ -216,6 +216,16 @@ def send_room_message(message):
                  {'data': message, 'sender': session['nick']},
                  room=session['room'])
 
+        elif 'www.' in message['data'] and '.com' in message['data']:
+            m = message['data'].split(' ')
+            url_locs = [i for i, s in enumerate(m) if 'www.' in s]
+            for loc in url_locs:
+                m[loc] = '<a target="_blank" href="http://' + m[loc] + '">' + m[loc] + '</a>'
+            message = ' '.join(m)
+            emit('my response',
+                 {'data': message, 'sender': session['nick']},
+                 room=session['room'])
+
         else:
             emit('my response',
                  {'data': message['data'], 'sender': session['nick']},
