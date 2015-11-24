@@ -210,7 +210,7 @@ def send_room_message(message):
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
             url_locs += [i for i, s in enumerate(m) if 'https://' in s]
             for loc in url_locs:
-                m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
+                m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
             message = ' '.join(m)
             emit('my response',
                  {'data': message, 'sender': session['nick']},
