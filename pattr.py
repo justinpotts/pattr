@@ -111,6 +111,26 @@ def nick_passes(nickname):
         return True
 
 
+def linkify(message):
+    domain_extensions = ['.com', '.net', '.edu', '.gov',
+                         '.io', '.uk', '.ca', '.de',
+                         '.fr', '.us', '.it', '.biz',
+                         '.xyz', '.co', '.me', '.info']
+    m = message.split(' ')
+    if 'http://' in message or 'https://' in message and any(ext in message for ext in domain_extensions):
+        url_locs = [i for i, s in enumerate(m) if 'http://' in s]
+        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+        for loc in url_locs:
+            m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
+    if 'www.' in message and any(ext in message for ext in domain_extensions):
+        url_locs = [i for i, s in enumerate(m) if 'www.' in s]
+        for loc in url_locs:
+            if 'http' not in m[loc]:
+                m[loc] = '<a target="_blank" href="http://' + m[loc] + '">' + m[loc] + '</a>'
+    new_message = ' '.join(m)
+    return new_message
+
+
 @socketio.on('send message', namespace='')
 def send_room_message(message):
     message['data'] = escape(message['data'], quote=True)
@@ -149,13 +169,7 @@ def send_room_message(message):
                      {'data': message, 'bot': 'true'},
                      room=session['uid'])
             else:
-                if 'http://' in message or 'https://' in message:
-                    m = message.split(' ')
-                    url_locs = [i for i, s in enumerate(m) if 'http://' in s]
-                    url_locs += [i for i, s in enumerate(m) if 'https://' in s]
-                    for loc in url_locs:
-                        m[loc] = '<a href="' + m[loc] + '">' + m[loc] + '</a>'
-                    message = ' '.join(m)
+                message = linkify(message)
                 emit('my response',
                      {'data': message, 'whisper': 'true', 'target': data[1], 'sender': session['nick']},
                      room=target_uid)
@@ -205,21 +219,9 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
-        if 'http://' in message['data'] or 'https://' in message['data']:
-            m = message['data'].split(' ')
-            url_locs = [i for i, s in enumerate(m) if 'http://' in s]
-            url_locs += [i for i, s in enumerate(m) if 'https://' in s]
-            for loc in url_locs:
-                m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
-            message = ' '.join(m)
-            emit('my response',
-                 {'data': message, 'sender': session['nick']},
-                 room=session['room'])
-
-        else:
-            emit('my response',
-                 {'data': message['data'], 'sender': session['nick']},
-                 room=session['room'])
+        emit('my response',
+             {'data': linkify(message['data']), 'sender': session['nick']},
+             room=session['room'])
 
 
 @socketio.on('disconnect request', namespace='')
