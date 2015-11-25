@@ -205,6 +205,7 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
+        domain_extensions = ['.com', '.net', '.edu', '.gov', '.io', '.uk', '.ca', '.de', '.fr', '.us', '.it', '.biz', '.xyz', '.co', '.me', '.info']
         if 'http://' in message['data'] or 'https://' in message['data']:
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
@@ -216,9 +217,7 @@ def send_room_message(message):
                  {'data': message, 'sender': session['nick']},
                  room=session['room'])
 
-        elif ('www.' in message['data'] and ('.com' in message['data'] or '.net' in message['data'] or '.edu' in message['data'] or '.gov' in message['data']
-        or '.io' in message['data'] or '.uk' in message['data'] or '.ca' in message['data'] or '.de' in message['data'] or '.fr' in message['data'] or '.us' in message['data']
-        or '.it' in message['data'] or '.biz' in message['data'] or '.xyz' in message['data'] or '.co' in message['data'] or '.me' in message['data'])):
+        elif 'www.' in message['data'] and any(ext in message['data'] for ext in domain_extensions):
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'www.' in s]
             for loc in url_locs:
