@@ -205,12 +205,23 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
+        domain_extensions = ['.com', '.net', '.edu', '.gov', '.io', '.uk', '.ca', '.de', '.fr', '.us', '.it', '.biz', '.xyz', '.co', '.me', '.info']
         if 'http://' in message['data'] or 'https://' in message['data']:
             m = message['data'].split(' ')
             url_locs = [i for i, s in enumerate(m) if 'http://' in s]
             url_locs += [i for i, s in enumerate(m) if 'https://' in s]
             for loc in url_locs:
                 m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
+            message = ' '.join(m)
+            emit('my response',
+                 {'data': message, 'sender': session['nick']},
+                 room=session['room'])
+
+        elif 'www.' in message['data'] and any(ext in message['data'] for ext in domain_extensions):
+            m = message['data'].split(' ')
+            url_locs = [i for i, s in enumerate(m) if 'www.' in s]
+            for loc in url_locs:
+                m[loc] = '<a target="_blank" href="http://' + m[loc] + '">' + m[loc] + '</a>'
             message = ' '.join(m)
             emit('my response',
                  {'data': message, 'sender': session['nick']},
