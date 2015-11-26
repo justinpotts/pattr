@@ -219,9 +219,15 @@ def send_room_message(message):
                  room=session['uid'])
 
     else:
-        emit('my response',
-             {'data': linkify(message['data']), 'sender': session['nick']},
-             room=session['room'])
+        if '\n' in message['data']:
+            msg = '<code><pre>' + message['data'] + '</pre></code>'
+            emit('my response',
+                 {'data': linkify(msg), 'sender': session['nick']},
+                 room=session['room'])
+        else:
+            emit('my response',
+                 {'data': linkify(message['data']), 'sender': session['nick']},
+                 room=session['room'])
 
 
 @socketio.on('disconnect request', namespace='')
