@@ -110,6 +110,9 @@ def nick_passes(nickname):
     else:
         return True
 
+def codify(message):
+    new_message = '<pre>' + message + '</pre>'
+    return new_message
 
 def linkify(message):
     domain_extensions = ['.com', '.net', '.edu', '.gov',
@@ -211,6 +214,10 @@ def send_room_message(message):
             emit('my response',
                  {'data': user_list_text, 'bot': 'true'},
                  room=session['uid'])
+        elif message['data'][:5] == '/code':
+            emit('my response',
+                 {'data': linkify(codify(msg)), 'sender': session['nick']},
+                 room=session['room'])
 
         else:
             msg = 'Command not found. For more information, type <code>/help</code>.'
@@ -220,9 +227,8 @@ def send_room_message(message):
 
     else:
         if '\n' in message['data']:
-            msg = '<code><pre>' + message['data'] + '</pre></code>'
             emit('my response',
-                 {'data': linkify(msg), 'sender': session['nick']},
+                 {'data': linkify(codify(msg)), 'sender': session['nick']},
                  room=session['room'])
         else:
             emit('my response',
