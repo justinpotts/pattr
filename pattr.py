@@ -43,14 +43,15 @@ def generate_id():
 
 def generate_nick():
     animals = ['buffalo', 'wildebeest', 'kudu', 'springbok', 'impala', 'antelope', 'lion', 'leopard', 'cheetah', 'serval',
-               'mongoose', 'elephant', 'giraffe', 'hyaena', 'jackal', 'rhino', 'zebra', 'crocodile', 'squid', 'frog','shark','whale',
-               'dolphin','narwhal','starfish','sponge','fish','anenome','seahorse','octopus','jellyfish','angler','blobfish','squidworm','tubeworm',
-               'eel']
+               'mongoose', 'elephant', 'giraffe', 'hyaena', 'jackal', 'rhino', 'zebra', 'crocodile', 'squid', 'frog', 'shark', 'whale',
+               'dolphin', 'narwhal', 'starfish', 'sponge', 'fish', 'anenome', 'seahorse', 'octopus', 'jellyfish', 'angler', 'blobfish',
+               'squidworm', 'tubeworm', 'eel']
 
     adjectives = ['mystic', 'rustic', 'sharp', 'toxic', 'enchanted', 'quiet', 'noisy', 'lively', 'modern',
                   'old', 'pleasant', 'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing',
-                  'jolly', 'mystic','angry','beautiful','cocky','dumb','electric','fancy','giant','howling','intelligent','jubilant',
-                  'klutzy','lame','monsterous','nervous','optimistic','picky','quivering','rambunctious','silly','telepathic','upbeat']
+                  'jolly', 'mystic', 'angry', 'beautiful', 'cocky', 'dumb', 'electric', 'fancy', 'giant', 'howling', 'intelligent',
+                  'jubilant', 'klutzy', 'lame', 'monsterous', 'nervous', 'optimistic', 'picky', 'quivering', 'rambunctious', 'silly',
+                  'telepathic', 'upbeat']
 
     return 'pa-' + adjectives[random.randint(0, len(adjectives) - 1)] + animals[random.randint(0, len(animals) - 1)]
 
