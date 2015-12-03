@@ -49,7 +49,7 @@ def generate_nick():
 
     adjectives = ['mystic', 'rustic', 'sharp', 'toxic', 'enchanted', 'quiet', 'noisy', 'lively', 'modern',
                   'old', 'pleasant', 'dashing', 'leaping', 'running', 'eating', 'speaking', 'sleeping', 'playing', 'bouncing',
-                  'jolly', 'mystic', 'angry', 'beautiful', 'cocky', 'dumb', 'electric', 'fancy', 'giant', 'howling', 'intelligent',
+                  'jolly', 'angry', 'beautiful', 'cocky', 'dumb', 'electric', 'fancy', 'giant', 'howling', 'intelligent',
                   'jubilant', 'klutzy', 'lame', 'monsterous', 'nervous', 'optimistic', 'picky', 'quivering', 'rambunctious', 'silly',
                   'telepathic', 'upbeat']
 
