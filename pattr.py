@@ -80,7 +80,7 @@ def charge():
         card=request.form['stripeToken']
     )
 
-    charge = stripe.Charge.create(
+    stripe.Charge.create(
         customer=customer.id,
         amount=amount,
         currency='usd',
@@ -264,7 +264,7 @@ def donate_ssl():
         card=request.form['stripeToken']
     )
 
-    charge = stripe.Charge.create(
+    stripe.Charge.create(
         customer=customer.id,
         amount=amount,
         currency='usd',
