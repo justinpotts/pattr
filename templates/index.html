@@ -53,6 +53,9 @@
 </head>
 <body>
   <div class="splash-container">
+    <a href="https://github.com/justinpotts/pattr/">
+      <img src="{{ url_for('static', filename='forkongithub.png')}}" style="position: absolute; top: 0; left: 0; border: 0;">
+    </a>
     <div class="splash">
       <h1 class="splash-head" style="font-family:Aller"><span class="element"></span><div id="main-name" style="display:none"><span style="color:lime">&middot;</span>pattr</div></h1>
       <p class="splash-subhead">
@@ -108,16 +111,14 @@
           in or providing an email address.
         </p>
         <p>
-          <strong>The Chat Extension System (Coming Soon):</strong>
-          Some people might want to keep their chat room, and thats ok! For $0.99 you can call
-          in one of our trusty bots, who will stay in the chat room for the next 24 hours to keep
-          it from being deleted.
-        </p>
+          <strong>Our mission:</strong>
+          Pattr believes in fostering an open web, with maximum security and privacy for its users.
+          We do this by providing a secure experience on the web for users to communicate quickly,
+          privately, and securely.
         <p>
           <strong>On Advertisements:</strong>
           We don't want your experience to be ruined by pesky advertisements, which also lowers the quality
-          of our site. We run purely off donations and Chat Extensions, so please… don't hesitate to pay for
-          our coffees!
+          of our site. We run purely off donations, so please… don't hesitate to send a gift our way!
         </p>
       </div>
     </div>
@@ -127,7 +128,7 @@
         <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
           <form action="/donate" method="post">
             <center>
-              <strong><h2>Help support Pattr. Buy us a cup of coffee.</h2></strong>
+              <strong><h2>Help support Pattr for just $1.</h2></strong>
               <script src="https://checkout.stripe.com/checkout.js" class="stripe-button"
                 data-key="{{ key }}"
                 data-description="Pattr Donation"

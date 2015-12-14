@@ -110,10 +110,6 @@ h3 {
     position:relative;
 }
 
-.content {
-    padding: 2em 1em 0;
-}
-
 .post {
     padding-bottom: 0.25em;
 }
@@ -206,29 +202,33 @@ h3 {
     position: fixed;
 }
 
-.pure-form textarea {
-    border: 2px solid #ddd;
-    box-shadow: none;
-    font-size: 100%;
-    margin-top: 10em;
-    margin-bottom: 1em;
-    width:68%;
-    height:7%;
-    outline:none;
-    resize: none;
-    bottom: 0px;
-    position: fixed;
-}
+@media only screen and (max-device-width: 480px) {
+  .pure-form textarea {
+      border: 2px solid #ddd;
+      box-shadow: none;
+      font-size: 100%;
+      margin-top: 10em;
+      margin-bottom: 1em;
+      width:90%;
+      height:7%;
+      outline:none;
+      resize: none;
+      bottom: 0px;
+      position: fixed;
+  }
 
-.chat {
-    width: 100%;
-    margin-bottom: 3em;
-    width:68%;
-    height: 85%;
-    overflow-y: scroll;
-    outline:none;
-    resize: none;
-    position: fixed;
+  .chat {
+      width: 90%;
+      margin-bottom: 3em;
+      height: 50%;
+      overflow-y: scroll;
+      outline:none;
+      resize: none;
+      position: fixed;
+  }
+  .content {
+      padding: 2em 1em 0;
+  }
 }
 
 #disconnect-button {
@@ -255,6 +255,31 @@ h3 {
         overflow: hidden;
         padding: 2em 3em 0;
         margin-left: 25%;
+    }
+
+    .chat {
+        width: 100%;
+        margin-bottom: 3em;
+        width:68%;
+        height: 85%;
+        overflow-y: scroll;
+        outline:none;
+        resize: none;
+        position: fixed;
+    }
+
+    .pure-form textarea {
+        border: 2px solid #ddd;
+        box-shadow: none;
+        font-size: 100%;
+        margin-top: 10em;
+        margin-bottom: 1em;
+        width:68%;
+        height:7%;
+        outline:none;
+        resize: none;
+        bottom: 0px;
+        position: fixed;
     }
 
     .header {
