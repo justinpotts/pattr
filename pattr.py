@@ -121,16 +121,17 @@ def linkify(message):
                          '.fr', '.us', '.it', '.biz',
                          '.xyz', '.co', '.me', '.info']
     m = message.split(' ')
-    if 'http://' in message or 'https://' in message and any(ext in message for ext in domain_extensions):
-        url_locs = [i for i, s in enumerate(m) if 'http://' in s]
-        url_locs += [i for i, s in enumerate(m) if 'https://' in s]
+    if 'http://' in message or 'https://' in message:
+        url_locs = [i for i, s in enumerate(m) if 'http://' in s or 'https://' in s]
         for loc in url_locs:
-            m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
-    if 'www.' in message and any(ext in message for ext in domain_extensions):
+            if any(ext in m[loc] for ext in domain_extensions):
+                m[loc] = '<a target="_blank" href="' + m[loc] + '">' + m[loc] + '</a>'
+    if 'www.' in message:
         url_locs = [i for i, s in enumerate(m) if 'www.' in s]
         for loc in url_locs:
             if 'http' not in m[loc]:
-                m[loc] = '<a target="_blank" href="http://' + m[loc] + '">' + m[loc] + '</a>'
+                if any(ext in m[loc] for ext in domain_extensions):
+                    m[loc] = '<a target="_blank" href="http://' + m[loc] + '">' + m[loc] + '</a>'
     new_message = ' '.join(m)
     return new_message
 
