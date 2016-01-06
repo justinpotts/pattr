@@ -60,7 +60,7 @@ def generate_nick():
 def enter_chat(roomcode):
     if request.url == 'http://pattr.me/c/' + roomcode or request.url == 'http://www.pattr.me/c/' + roomcode:
         return redirect('http://chat.pattr.me/c/' + roomcode)
-    elif request.url == 'https://www.pattr.me/c/' or request.url == 'https://pattr.me/c/':
+    elif request.url == 'https://www.pattr.me/c/' + roomcode or request.url == 'https://pattr.me/c/' + roomcode:
         return redirect('https://chat.pattr.me/c/' + roomcode)
     else:
         session['uid'] = generate_id()
