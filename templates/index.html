@@ -19,6 +19,9 @@
       if (window.location.href.indexOf('chat') > -1) {
         window.location.href='https://pattr.me';
       }
+      if (window.location.protocol != "https:") {
+        window.location.href = "https:" + window.location.href.substring(window.location.protocol.length);
+      }
     });
 
     $(function(){

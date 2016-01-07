@@ -87,7 +87,7 @@
       $('form#disconnect').submit(function(event) {
         socket.emit('disconnect request');
         if(window.location.href.indexOf('chat.pattr.me') > -1) {
-          window.location.href='http://pattr.me/';
+          window.location.href='https://pattr.me/';
         }
         else {
           window.location.href='/';
