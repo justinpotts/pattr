@@ -10,14 +10,14 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='pure-min.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='grids-responsive-min.css')}}">
   <link rel=stylesheet type="text/css" href="{{ url_for('static', filename='marketing.css') }}">
-  <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+  <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
 
   <script src="{{ url_for('static', filename='jquery-2.1.4.min.js')}}"></script>
   <script src="{{ url_for('static', filename='typed.js')}}"></script>
   <script type="text/javascript">
     $(document).ready(function(){
       if (window.location.href.indexOf('chat') > -1) {
-        window.location.href='http://pattr.me';
+        window.location.href='https://pattr.me';
       }
     });
 
@@ -33,11 +33,11 @@
 
     function startChat() {
       var roomCode = Math.random().toString(36).slice(-8);
-      if(window.location.href == 'http://pattr.me' || window.location.href == 'http://www.pattr.me') {
-        window.location.href='http://chat.pattr.me/c/'+roomCode;
+      if ( window.location.href == 'https://pattr.me' || window.location.href == 'https://www.pattr.me' ) {
+        window.location.href = 'https://chat.pattr.me/c/' + roomCode;
       }
       else {
-        window.location.href='/c/'+roomCode;
+        window.location.href = '/c/' + roomCode;
       }
     }
   </script>
