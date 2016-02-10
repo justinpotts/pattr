@@ -202,8 +202,8 @@ def send_room_message(message):
             about_text = '\
              <h2><strong>About</strong></h2> \
              <p><span style="font-family:Aller">pattr</span> was developed by \
-             <a href="https://twitter.com/PottsJustin">Justin Potts</a>, and <a href="https://twitter.com/thealexmeza">Alex Meza</a> \
-             under the BSD Open Source license.</p> \
+             <a href="https://twitter.com/PottsJustin">Justin Potts</a>, <a href="https://twitter.com/thealexmeza">Alex Meza</a>, \
+             and other contributors under the BSD Open Source license.</p> \
              <p>Visit the GitHub repository <a href="https://github.com/justinpotts/pattr">here</a>, or send us a message at \
              <a href="mailto:pattr@pattr.me">pattr@pattr.me</a>.'
             emit('my response',
@@ -217,6 +217,27 @@ def send_room_message(message):
             user_list_text = '<h2><strong>Users (' + str(len(users)) + ')</strong></h2><p>' + ', '.join(sorted(users)) + '</p>'
             emit('my response',
                  {'data': user_list_text, 'bot': 'true'},
+                 room=session['uid'])
+        
+        elif message['data'][:7] == '/imgurl':
+            imgurl = message['data'][8:]
+            len3ext = imgurl[len(imgurl)-3:]
+            len4ext = imgurl[len(imgurl)-4:]
+            if message['data'][8:13] is not 'https':
+                message = 'For security reasons, your image URL must be from a HTTPS source. Please try again.'
+                emit('my response',
+                 {'data': message, 'bot': 'true'},
+                 room=session['uid'])
+            elif len3ext == 'jpg' or len3ext == 'JPG' or len3ext == 'png' or len3ext == 'PNG' or len3ext == 'gif' or len3ext == 'GIF' or len3ext == 'bmp' or len3ext == 'BMP' or len4ext == 'jpeg' or len4ext == 'JPEG' or len4ext == 'tiff' or len4ext == 'TIFF':
+                message = '\
+                <img src="' + imgurl + '" width="75%" />'
+                emit('my response',
+                     {'data': message, 'sender': session['nick']},
+                     room=session['uid'])
+            else:
+                message = 'Your image URL is invalid. Please try again.'
+                emit('my response',
+                 {'data': message, 'bot': 'true'},
                  room=session['uid'])
 
         else:
