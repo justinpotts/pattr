@@ -223,7 +223,7 @@ def send_room_message(message):
             imgurl = message['data'][8:]
             len3ext = imgurl[len(imgurl)-3:]
             len4ext = imgurl[len(imgurl)-4:]
-            if message['data'][8:13] is not 'https':
+            if message['data'][8:12] is not 'https':
                 message = 'For security reasons, your image URL must be from a HTTPS source. Please try again.'
                 emit('my response',
                  {'data': message, 'bot': 'true'},
