@@ -223,14 +223,14 @@ def send_room_message(message):
             imgurl = message['data'][8:]
             len3ext = imgurl[len(imgurl)-3:]
             len4ext = imgurl[len(imgurl)-4:]
-            if message['data'][8:12] is not 'https':
+            if message['data'][8:13] != 'https':
                 message = 'For security reasons, your image URL must be from a HTTPS source. Please try again.'
                 emit('my response',
                  {'data': message, 'bot': 'true'},
                  room=session['uid'])
             elif len3ext == 'jpg' or len3ext == 'JPG' or len3ext == 'png' or len3ext == 'PNG' or len3ext == 'gif' or len3ext == 'GIF' or len3ext == 'bmp' or len3ext == 'BMP' or len4ext == 'jpeg' or len4ext == 'JPEG' or len4ext == 'tiff' or len4ext == 'TIFF':
                 message = '\
-                <img src="' + imgurl + '" width="75%" />'
+                <img src="' + imgurl + '" width="30%" />'
                 emit('my response',
                      {'data': message, 'sender': session['nick']},
                      room=session['uid'])
